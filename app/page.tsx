@@ -1,12 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Brain, Zap, Globe, Mail, ArrowRight, Sparkles } from 'lucide-react';
+import { Brain, Zap, Globe, Mail, ArrowRight, Sparkles, User, Calendar, CheckCircle, Star } from 'lucide-react';
 import { toast } from 'sonner';
+import { format } from 'date-fns';
+import { zhCN } from 'date-fns/locale';
+
+interface Testimonial {
+  id: string;
+  email: string;
+  document_title: string;
+  document_introduction: string;
+  created_at: string;
+  first_access: boolean;
+}
 
 export default function Home() {
   const [email, setEmail] = useState('');
@@ -14,6 +25,23 @@ export default function Home() {
   const [showPwdModal, setShowPwdModal] = useState(false);
   const [adminPwd, setAdminPwd] = useState('');
   const [pwdLoading, setPwdLoading] = useState(false);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+
+  useEffect(() => {
+    fetchTestimonials();
+  }, []);
+
+  const fetchTestimonials = async () => {
+    try {
+      const response = await fetch('/api/testimonials');
+      const data = await response.json();
+      if (data.success) {
+        setTestimonials(data.testimonials);
+      }
+    } catch (error) {
+      console.error('Error fetching testimonials:', error);
+    }
+  };
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -67,6 +95,13 @@ export default function Home() {
     } finally {
       setPwdLoading(false);
     }
+  };
+
+  const maskEmail = (email: string) => {
+    const [username, domain] = email.split('@');
+    if (username.length <= 2) return email;
+    const maskedUsername = username[0] + '*'.repeat(username.length - 2) + username[username.length - 1];
+    return `${maskedUsername}@${domain}`;
   };
 
   return (
@@ -194,42 +229,115 @@ export default function Home() {
             </Card>
           </motion.div>
 
-          {/* Features */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mt-12"
-          >
-            {[
-              {
-                icon: Brain,
-                title: 'AI-Powered Content',
-                description: 'Content generation and optimization powered by AI technology',
-                color: 'glow-purple'
-              },
-              {
-                icon: Globe,
-                title: 'Web3 Ecosystem',
-                description: 'Deep integration of Web3 technology and application scenarios',
-                color: 'glow-cyan'
-              },
-              {
-                icon: Sparkles,
-                title: 'Expert Guidance',
-                description: 'Practical experience sharing from industry experts',
-                color: 'glow-red'
-              }
-            ].map((feature, index) => (
-              <Card key={index} className={`glass-effect border-white/20 hover:${feature.color} transition-all duration-300`}>
-                <CardHeader className="text-center">
-                  <feature.icon className="w-8 h-8 mx-auto text-primary mb-2" />
-                  <CardTitle className="text-lg">{feature.title}</CardTitle>
-                  <CardDescription>{feature.description}</CardDescription>
-                </CardHeader>
-              </Card>
-            ))}
-          </motion.div>
+          {/* User Testimonials Section */}
+          {testimonials.length > 0 && (
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.7 }}
+              className="mt-16 space-y-8"
+            >
+              <div className="text-center space-y-2">
+                <h2 className="text-3xl font-bold text-gradient">Trusted by Professionals</h2>
+                <p className="text-slate-600 dark:text-slate-300">
+                  Join {testimonials.length}+ users who are already transforming with Web3 & AI
+                </p>
+              </div>
+
+              {/* Flowing Testimonials Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+                {testimonials.slice(0, 9).map((testimonial, index) => (
+                  <motion.div
+                    key={testimonial.id}
+                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    transition={{ 
+                      delay: 0.8 + (index * 0.1),
+                      duration: 0.5,
+                      ease: "easeOut"
+                    }}
+                    whileHover={{ 
+                      scale: 1.02,
+                      transition: { duration: 0.2 }
+                    }}
+                  >
+                    <Card className="glass-effect border-white/20 hover:glow-purple transition-all duration-500 h-full relative overflow-hidden group">
+                      {/* Subtle gradient overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                      
+                      <CardHeader className="relative z-10">
+                        <div className="flex items-center justify-between mb-3">
+                          <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 rounded-full gradient-ai-subtle flex items-center justify-center">
+                              <User className="w-5 h-5 text-primary" />
+                            </div>
+                            <div>
+                              <p className="font-medium text-sm">{maskEmail(testimonial.email)}</p>
+                              <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+                                <Calendar className="w-3 h-3" />
+                                <span>{format(new Date(testimonial.created_at), 'MMM d, yyyy')}</span>
+                              </div>
+                            </div>
+                          </div>
+                          {!testimonial.first_access && (
+                            <div className="flex items-center space-x-1 text-green-600">
+                              <CheckCircle className="w-4 h-4" />
+                              <span className="text-xs font-medium">Accessed</span>
+                            </div>
+                          )}
+                        </div>
+                        
+                        <CardTitle className="text-base line-clamp-2 group-hover:text-gradient transition-all duration-300">
+                          {testimonial.document_title}
+                        </CardTitle>
+                      </CardHeader>
+                      
+                      <CardContent className="relative z-10">
+                        <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+                          "{testimonial.document_introduction}"
+                        </p>
+                        
+                        {/* Star rating visual */}
+                        <div className="flex items-center space-x-1 mt-4 opacity-60">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="w-3 h-3 fill-yellow-400 text-yellow-400" />
+                          ))}
+                        </div>
+                      </CardContent>
+                      
+                      {/* Subtle bottom accent */}
+                      <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+
+              {/* Stats Bar */}
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 1.5 }}
+                className="flex justify-center items-center space-x-8 pt-8"
+              >
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gradient">{testimonials.length}+</div>
+                  <div className="text-sm text-muted-foreground">Active Users</div>
+                </div>
+                <div className="w-px h-8 bg-gradient-to-b from-transparent via-border to-transparent" />
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gradient">
+                    {testimonials.filter(t => !t.first_access).length}
+                  </div>
+                  <div className="text-sm text-muted-foreground">Documents Accessed</div>
+                </div>
+                <div className="w-px h-8 bg-gradient-to-b from-transparent via-border to-transparent" />
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-gradient">100%</div>
+                  <div className="text-sm text-muted-foreground">Satisfaction Rate</div>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
         </div>
       </main>
 
