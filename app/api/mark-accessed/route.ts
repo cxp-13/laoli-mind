@@ -45,8 +45,9 @@ export async function POST(request: NextRequest) {
         console.log('Sending thank you email...', document.thank_you_content);
         await sendThankYouEmail(
           email,
-          `Welcome aboard | 🖐️ Please find attached Lantianlaoli's document titled '${document. title}'`,
-          document.thank_you_content
+          document.title,
+          document.introduction,
+          document.notification_link
         );
       } catch (emailError) {
         console.error('Error sending thank you email:', emailError);

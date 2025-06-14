@@ -1,20 +1,20 @@
 import * as React from 'react';
 
 interface EmailTemplateProps {
-  documentTitle: string;
-  documentIntroduction: string;
-  documentLink: string;
+  title: string;
+  introduction: string;
+  link: string;
 }
 
 export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
-  documentTitle,
-  documentIntroduction,
-  documentLink,
+  title,
+  introduction,
+  link,
 }) => (
   <div style={{ fontFamily: 'Arial, sans-serif', color: '#222' }}>
     <p>Dear friend,</p>
     <p>
-      Thank you so much for recognizing my experience in the Web3 industry! 😎<br />
+      Thank you so much for recognizing my experience in the Web3 x AI industry! 😎<br />
       At this moment, you have taken an important step into the world of Web3.
     </p>
     <p>
@@ -22,9 +22,9 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
       Your comment and access permission have been granted. Here is your portal:
     </p>
     <p>
-      <strong>Document:</strong> {documentTitle}<br />
-      <strong>Introduction:</strong> {documentIntroduction}<br />
-      👉 <a href={documentLink} target="_blank" rel="noopener noreferrer">Portal</a>
+      <strong>Document:</strong> {title}<br />
+      <strong>Introduction:</strong> {introduction}<br />
+      👉 <a href={link} target="_blank" rel="noopener noreferrer">Portal</a>
     </p>
     <p>
       Believe this:<br />
