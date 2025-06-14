@@ -61,7 +61,7 @@ export default function Home() {
       });
 
       const data = await response.json();
-      
+
       if (data.hasAccess) {
         window.location.href = `/access?email=${encodeURIComponent(email)}`;
       } else {
@@ -108,7 +108,7 @@ export default function Home() {
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <header className="px-4 lg:px-6 h-16 flex items-center justify-between border-b border-white/10 glass-effect">
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           className="flex items-center space-x-2"
@@ -120,13 +120,13 @@ export default function Home() {
             lantianlaoli Web3 x AI Transformation Hub
           </span>
         </motion.div>
-        
+
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
         >
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
             onClick={() => setShowPwdModal(true)}
             className="glass-effect hover:glow-red"
@@ -140,7 +140,7 @@ export default function Home() {
       <main className="flex-1 flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-4xl mx-auto text-center space-y-8">
           {/* Animated Icons */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex justify-center space-x-8 mb-8"
@@ -207,8 +207,8 @@ export default function Home() {
                     className="text-center glass-effect border-white/30"
                     required
                   />
-                  <Button 
-                    type="submit" 
+                  <Button
+                    type="submit"
                     className="w-full gradient-ai hover:scale-105 transition-transform glow-red"
                     disabled={isLoading}
                   >
@@ -251,12 +251,12 @@ export default function Home() {
                     key={testimonial.id}
                     initial={{ opacity: 0, y: 20, scale: 0.95 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ 
+                    transition={{
                       delay: 0.8 + (index * 0.1),
                       duration: 0.5,
                       ease: "easeOut"
                     }}
-                    whileHover={{ 
+                    whileHover={{
                       scale: 1.02,
                       transition: { duration: 0.2 }
                     }}
@@ -264,7 +264,7 @@ export default function Home() {
                     <Card className="glass-effect border-white/20 hover:glow-purple transition-all duration-500 h-full relative overflow-hidden group">
                       {/* Subtle gradient overlay */}
                       <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-transparent to-cyan-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                      
+
                       <CardHeader className="relative z-10">
                         <div className="flex items-center justify-between mb-3">
                           <div className="flex items-center space-x-3">
@@ -286,17 +286,15 @@ export default function Home() {
                             </div>
                           )}
                         </div>
-                        
+
                         <CardTitle className="text-base line-clamp-2 group-hover:text-gradient transition-all duration-300">
                           {testimonial.document_title}
                         </CardTitle>
                       </CardHeader>
-                      
+
                       <CardContent className="relative z-10">
-                        <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-                          "{testimonial.document_introduction}"
-                        </p>
-                        
+
+
                         {/* Star rating visual */}
                         <div className="flex items-center space-x-1 mt-4 opacity-60">
                           {[...Array(5)].map((_, i) => (
@@ -304,7 +302,7 @@ export default function Home() {
                           ))}
                         </div>
                       </CardContent>
-                      
+
                       {/* Subtle bottom accent */}
                       <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-cyan-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                     </Card>
