@@ -52,30 +52,30 @@ interface DocumentFormProps {
 const DocumentForm = ({ formData, isLoading, isEdit, onSubmit, onInputChange, onCancel }: DocumentFormProps) => (
   <form onSubmit={onSubmit} className="space-y-4">
     <div className="space-y-2">
-      <Label htmlFor={`title-${isEdit ? 'edit' : 'create'}`}>标题 *</Label>
+      <Label htmlFor={`title-${isEdit ? 'edit' : 'create'}`}>Title *</Label>
       <Input
         id={`title-${isEdit ? 'edit' : 'create'}`}
         value={formData.title}
         onChange={(e) => onInputChange('title', e.target.value)}
-        placeholder="输入文档标题"
+        placeholder="Enter document title"
         required
       />
     </div>
 
     <div className="space-y-2">
-      <Label htmlFor={`introduction-${isEdit ? 'edit' : 'create'}`}>简介 *</Label>
+      <Label htmlFor={`introduction-${isEdit ? 'edit' : 'create'}`}>Introduction *</Label>
       <Textarea
         id={`introduction-${isEdit ? 'edit' : 'create'}`}
         value={formData.introduction}
         onChange={(e) => onInputChange('introduction', e.target.value)}
-        placeholder="输入文档简介"
+        placeholder="Enter document introduction"
         rows={3}
         required
       />
     </div>
 
     <div className="space-y-2">
-      <Label htmlFor={`notification_link-${isEdit ? 'edit' : 'create'}`}>文档链接 *</Label>
+      <Label htmlFor={`notification_link-${isEdit ? 'edit' : 'create'}`}>Document Link *</Label>
       <Input
         id={`notification_link-${isEdit ? 'edit' : 'create'}`}
         type="url"
@@ -87,12 +87,12 @@ const DocumentForm = ({ formData, isLoading, isEdit, onSubmit, onInputChange, on
     </div>
 
     <div className="space-y-2">
-      <Label htmlFor={`thank_you_content-${isEdit ? 'edit' : 'create'}`}>感谢邮件内容</Label>
+      <Label htmlFor={`thank_you_content-${isEdit ? 'edit' : 'create'}`}>Thank You Email Content</Label>
       <Textarea
         id={`thank_you_content-${isEdit ? 'edit' : 'create'}`}
         value={formData.thank_you_content}
         onChange={(e) => onInputChange('thank_you_content', e.target.value)}
-        placeholder="输入感谢邮件的内容（可选）"
+        placeholder="Enter thank you email content (optional)"
         rows={4}
       />
     </div>
@@ -103,16 +103,16 @@ const DocumentForm = ({ formData, isLoading, isEdit, onSubmit, onInputChange, on
         variant="outline"
         onClick={onCancel}
       >
-        取消
+        Cancel
       </Button>
       <Button type="submit" disabled={isLoading} className="gradient-ai">
         {isLoading ? (
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-            <span>{isEdit ? '更新中...' : '创建中...'}</span>
+            <span>{isEdit ? 'Updating...' : 'Creating...'}</span>
           </div>
         ) : (
-          isEdit ? '更新文档' : '创建文档'
+          isEdit ? 'Update Document' : 'Create Document'
         )}
       </Button>
     </div>
@@ -150,7 +150,7 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title || !formData.introduction || !formData.notification_link) {
-      toast.error('请填写所有必填字段');
+      toast.error('Please fill in all required fields');
       return;
     }
 
@@ -167,16 +167,16 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
       const data = await response.json();
       
       if (data.success) {
-        toast.success('文档创建成功');
+        toast.success('Document created successfully');
         setIsCreateDialogOpen(false);
         resetForm();
         onRefresh();
       } else {
-        toast.error(data.error || '创建失败');
+        toast.error(data.error || 'Creation failed');
       }
     } catch (error) {
       console.error('Error creating document:', error);
-      toast.error('创建文档时出错');
+      toast.error('Error creating document');
     } finally {
       setIsLoading(false);
     }
@@ -196,7 +196,7 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!editingDoc || !formData.title || !formData.introduction || !formData.notification_link) {
-      toast.error('请填写所有必填字段');
+      toast.error('Please fill in all required fields');
       return;
     }
 
@@ -213,24 +213,24 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
       const data = await response.json();
       
       if (data.success) {
-        toast.success('文档更新成功');
+        toast.success('Document updated successfully');
         setIsEditDialogOpen(false);
         setEditingDoc(null);
         resetForm();
         onRefresh();
       } else {
-        toast.error(data.error || '更新失败');
+        toast.error(data.error || 'Update failed');
       }
     } catch (error) {
       console.error('Error updating document:', error);
-      toast.error('更新文档时出错');
+      toast.error('Error updating document');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('确定要删除这个文档吗？此操作不可恢复。')) {
+    if (!confirm('Are you sure you want to delete this document? This action cannot be undone.')) {
       return;
     }
 
@@ -242,14 +242,14 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
       const data = await response.json();
       
       if (data.success) {
-        toast.success('文档删除成功');
+        toast.success('Document deleted successfully');
         onRefresh();
       } else {
-        toast.error(data.error || '删除失败');
+        toast.error(data.error || 'Delete failed');
       }
     } catch (error) {
       console.error('Error deleting document:', error);
-      toast.error('删除文档时出错');
+      toast.error('Error deleting document');
     }
   };
 
@@ -268,20 +268,20 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gradient">文档管理</h2>
-          <p className="text-muted-foreground">管理您的内容文档</p>
+          <h2 className="text-2xl font-bold text-gradient">Document Management</h2>
+          <p className="text-muted-foreground">Manage your content documents</p>
         </div>
         
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button className="gradient-ai hover:scale-105 transition-transform glow-red">
               <Plus className="w-4 h-4 mr-2" />
-              新建文档
+              New Document
             </Button>
           </DialogTrigger>
           <DialogContent className="glass-effect border-white/20 max-w-2xl">
             <DialogHeader>
-              <DialogTitle className="text-gradient">创建新文档</DialogTitle>
+              <DialogTitle className="text-gradient">Create New Document</DialogTitle>
             </DialogHeader>
             <DocumentForm
               formData={formData}
@@ -303,9 +303,9 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
               <div className="w-16 h-16 rounded-full gradient-ai-subtle flex items-center justify-center mx-auto">
                 <AlertCircle className="w-8 h-8 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-semibold">暂无文档</h3>
+              <h3 className="text-xl font-semibold">No documents</h3>
               <p className="text-muted-foreground max-w-md mx-auto">
-                还没有创建任何文档。点击上面的"新建文档"按钮来创建您的第一个文档。
+                No documents have been created yet. Click the "New Document" button above to create your first document.
               </p>
             </div>
           </CardContent>
@@ -368,7 +368,7 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
                       className="w-full glass-effect"
                     >
                       <ExternalLink className="w-4 h-4 mr-2" />
-                      查看文档
+                      View Document
                     </Button>
                   </CardContent>
                 </Card>
@@ -382,7 +382,7 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="glass-effect border-white/20 max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-gradient">编辑文档</DialogTitle>
+            <DialogTitle className="text-gradient">Edit Document</DialogTitle>
           </DialogHeader>
           <DocumentForm
             formData={formData}

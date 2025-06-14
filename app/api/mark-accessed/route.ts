@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         console.log('Sending thank you email...', document.thank_you_content);
         await sendThankYouEmail(
           email,
-          `欢迎登船｜🖐️请查收lantianlaoli《${document.title}》`,
+          `Welcome aboard | 🖐️ Please find attached Lantianlaoli's document titled '${document. title}'`,
           document.thank_you_content
         );
       } catch (emailError) {

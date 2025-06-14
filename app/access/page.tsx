@@ -91,7 +91,7 @@ export default function AccessPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center space-y-4">
           <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto" />
-          <p className="text-slate-600">正在加载您的专属内容...</p>
+          <p className="text-slate-600">Loading your exclusive content...</p>
         </div>
       </div>
     );
@@ -109,11 +109,11 @@ export default function AccessPage() {
             className="hover:glow-red"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
-            返回
+            Back
           </Button>
           <div className="flex items-center space-x-2">
             <Brain className="w-6 h-6 text-primary" />
-            <span className="font-semibold text-gradient">专属内容访问</span>
+            <span className="font-semibold text-gradient">Exclusive Content Access</span>
           </div>
         </div>
         <Badge variant="outline" className="glass-effect">
@@ -131,9 +131,9 @@ export default function AccessPage() {
                   <div className="w-16 h-16 rounded-full gradient-ai-subtle flex items-center justify-center mx-auto">
                     <Brain className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-xl font-semibold">暂无可访问内容</h3>
+                  <h3 className="text-xl font-semibold">No accessible content</h3>
                   <p className="text-slate-600">
-                    您目前没有可访问的文档。请联系管理员获取访问权限。
+                    You currently have no accessible documents. Please contact the administrator.
                   </p>
                 </div>
               </CardContent>
@@ -141,9 +141,9 @@ export default function AccessPage() {
           ) : (
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <h1 className="text-3xl font-bold text-gradient">您的专属内容</h1>
+                <h1 className="text-3xl font-bold text-gradient">Your Exclusive Content</h1>
                 <p className="text-slate-600">
-                  您有 <span className="font-semibold text-primary">{documents.length}</span> 个可访问的文档
+                  You have <span className="font-semibold text-primary">{documents.length}</span> accessible documents
                 </p>
               </div>
 
@@ -164,7 +164,7 @@ export default function AccessPage() {
                           {!doc.first_access && (
                             <Badge variant="secondary" className="ml-2">
                               <CheckCircle className="w-3 h-3 mr-1" />
-                              已访问
+                              Accessed
                             </Badge>
                           )}
                         </div>
@@ -178,7 +178,7 @@ export default function AccessPage() {
                           className="w-full gradient-ai hover:scale-105 transition-transform"
                         >
                           <ExternalLink className="w-4 h-4 mr-2" />
-                          访问文档
+                          View Document
                         </Button>
                       </CardContent>
                     </Card>
@@ -244,10 +244,10 @@ export default function AccessPage() {
                     <Gift className="w-8 h-8 text-white" />
                   </motion.div>
                   <CardTitle className="text-2xl font-bold text-gradient mb-2">
-                    🎉 恭喜获得访问权限！
+                    🎉 Congratulations! You've Got Access!
                   </CardTitle>
                   <CardDescription className="text-base">
-                    欢迎来到 <strong>{firstAccessDoc.title}</strong>
+                    Welcome to <strong>{firstAccessDoc.title}</strong>
                   </CardDescription>
                 </CardHeader>
 
@@ -265,14 +265,14 @@ export default function AccessPage() {
                       className="gradient-ai hover:scale-105 transition-transform glow-red"
                     >
                       <Star className="w-4 h-4 mr-2" />
-                      立即访问文档
+                      Access Document Now
                     </Button>
                     <Button
                       variant="outline"
                       onClick={closeCelebration}
                       className="glass-effect"
                     >
-                      稍后访问
+                      Access Later
                     </Button>
                   </div>
                 </CardContent>

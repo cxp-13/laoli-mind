@@ -64,12 +64,12 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.document_id) {
-      toast.error('请填写所有必填字段');
+      toast.error('Please fill in all required fields');
       return;
     }
 
     if (!formData.email.includes('@')) {
-      toast.error('请输入有效的邮箱地址');
+      toast.error('Please enter a valid email address');
       return;
     }
 
@@ -86,23 +86,23 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
       const data = await response.json();
       
       if (data.success) {
-        toast.success('权限分配成功');
+        toast.success('Permission assigned successfully');
         setIsCreateDialogOpen(false);
         resetForm();
         onRefresh();
       } else {
-        toast.error(data.error || '分配失败');
+        toast.error(data.error || 'Assignment failed');
       }
     } catch (error) {
       console.error('Error creating permission:', error);
-      toast.error('分配权限时出错');
+      toast.error('Error assigning permission');
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('确定要删除这个权限吗？用户将无法继续访问相关文档。')) {
+    if (!confirm('Are you sure you want to delete this permission? The user will no longer be able to access the related document.')) {
       return;
     }
 
@@ -114,14 +114,14 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
       const data = await response.json();
       
       if (data.success) {
-        toast.success('权限删除成功');
+        toast.success('Permission deleted successfully');
         onRefresh();
       } else {
-        toast.error(data.error || '删除失败');
+        toast.error(data.error || 'Delete failed');
       }
     } catch (error) {
       console.error('Error deleting permission:', error);
-      toast.error('删除权限时出错');
+      toast.error('Error deleting permission');
     }
   };
 
@@ -139,24 +139,24 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gradient">权限管理</h2>
-          <p className="text-muted-foreground">管理用户文档访问权限</p>
+          <h2 className="text-2xl font-bold text-gradient">Permission Management</h2>
+          <p className="text-muted-foreground">Manage user document access permissions</p>
         </div>
         
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button className="gradient-ai hover:scale-105 transition-transform glow-purple">
               <Plus className="w-4 h-4 mr-2" />
-              分配权限
+              Assign Permission
             </Button>
           </DialogTrigger>
           <DialogContent className="glass-effect border-white/20">
             <DialogHeader>
-              <DialogTitle className="text-gradient">分配访问权限</DialogTitle>
+              <DialogTitle className="text-gradient">Assign Access Permission</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleCreate} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">用户邮箱 *</Label>
+                <Label htmlFor="email">User Email *</Label>
                 <Input
                   id="email"
                   type="email"
@@ -168,13 +168,13 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="document">选择文档 *</Label>
+                <Label htmlFor="document">Select Document *</Label>
                 <Select
                   value={formData.document_id}
                   onValueChange={(value) => setFormData({ ...formData, document_id: value })}
                 >
                   <SelectTrigger id="document">
-                    <SelectValue placeholder="选择要分配的文档" />
+                    <SelectValue placeholder="Select a document to assign" />
                   </SelectTrigger>
                   <SelectContent>
                     {documents.map((doc) => (
@@ -195,16 +195,16 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                     resetForm();
                   }}
                 >
-                  取消
+                  Cancel
                 </Button>
                 <Button type="submit" disabled={isLoading} className="gradient-ai">
                   {isLoading ? (
                     <div className="flex items-center space-x-2">
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                      <span>分配中...</span>
+                      <span>Assigning...</span>
                     </div>
                   ) : (
-                    '分配权限'
+                    'Assign Permission'
                   )}
                 </Button>
               </div>
@@ -221,9 +221,9 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
               <div className="w-16 h-16 rounded-full gradient-ai-subtle flex items-center justify-center mx-auto">
                 <AlertCircle className="w-8 h-8 text-muted-foreground" />
               </div>
-              <h3 className="text-xl font-semibold">暂无权限</h3>
+              <h3 className="text-xl font-semibold">No permissions</h3>
               <p className="text-muted-foreground max-w-md mx-auto">
-                还没有分配任何访问权限。点击上面的"分配权限"按钮来为用户分配文档访问权限。
+                No access permissions have been assigned yet. Click the "Assign Permission" button above to assign document access to users.
               </p>
             </div>
           </CardContent>
@@ -249,12 +249,12 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                         <div>
                           <CardTitle className="text-lg">{email}</CardTitle>
                           <p className="text-sm text-muted-foreground">
-                            {userPermissions.length} 个文档权限
+                            {userPermissions.length} document permissions
                           </p>
                         </div>
                       </div>
                       <Badge variant="secondary">
-                        {userPermissions.filter(p => p.first_access).length} 未访问
+                        {userPermissions.filter(p => p.first_access).length} Not Accessed
                       </Badge>
                     </div>
                   </CardHeader>
@@ -271,12 +271,12 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                               {perm.first_access ? (
                                 <Badge variant="outline" className="text-yellow-600 border-yellow-300">
                                   <Clock className="w-3 h-3 mr-1" />
-                                  未访问
+                                  Not Accessed
                                 </Badge>
                               ) : (
                                 <Badge variant="outline" className="text-green-600 border-green-300">
                                   <CheckCircle className="w-3 h-3 mr-1" />
-                                  已访问
+                                  Accessed
                                 </Badge>
                               )}
                             </div>
