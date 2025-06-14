@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,10 +9,10 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Plus, 
-  Trash2, 
-  Mail, 
+import {
+  Plus,
+  Trash2,
+  Mail,
   Calendar,
   AlertCircle,
   CheckCircle,
@@ -54,6 +54,14 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
     document_id: '',
   });
 
+  const [selectDoc, setSelectDoc] = useState<Document>();
+
+
+  useEffect(() => {
+    setSelectDoc(documents.find(doc => String(doc.id) === String(formData.document_id)));
+    console.log('selectDoc:', selectDoc)
+  }, [formData, documents]);
+
   const resetForm = () => {
     setFormData({
       email: '',
@@ -84,7 +92,7 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         toast.success('Permission assigned successfully');
         setIsCreateDialogOpen(false);
@@ -112,7 +120,7 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
       });
 
       const data = await response.json();
-      
+
       if (data.success) {
         toast.success('Permission deleted successfully');
         onRefresh();
@@ -142,7 +150,7 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
           <h2 className="text-2xl font-bold text-gradient">Permission Management</h2>
           <p className="text-muted-foreground">Manage user document access permissions</p>
         </div>
-        
+
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
             <Button className="gradient-ai hover:scale-105 transition-transform glow-purple">
@@ -171,10 +179,12 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                 <Label htmlFor="document">Select Document *</Label>
                 <Select
                   value={formData.document_id}
-                  onValueChange={(value) => setFormData({ ...formData, document_id: value })}
+                  onValueChange={(value) =>
+                    setFormData({ ...formData, document_id: value })
+                  }
                 >
                   <SelectTrigger id="document">
-                    <SelectValue placeholder="Select a document to assign" />
+                    <SelectValue placeholder="Select a document to assign" >{selectDoc?.title}</SelectValue>
                   </SelectTrigger>
                   <SelectContent>
                     {documents.map((doc) => (
