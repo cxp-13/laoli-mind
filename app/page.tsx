@@ -1,0 +1,219 @@
+'use client';
+
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Brain, Zap, Globe, Mail, ArrowRight, Sparkles } from 'lucide-react';
+import { toast } from 'sonner';
+
+export default function Home() {
+  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!email || !email.includes('@')) {
+      toast.error('请输入有效的邮箱地址');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/check-access', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+      
+      if (data.hasAccess) {
+        window.location.href = `/access?email=${encodeURIComponent(email)}`;
+      } else {
+        toast.error('抱歉，您暂时没有访问权限。请联系管理员获取访问权限。');
+      }
+    } catch (error) {
+      console.error('Error checking access:', error);
+      toast.error('检查访问权限时出错，请稍后再试');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex flex-col">
+      {/* Header */}
+      <header className="px-4 lg:px-6 h-16 flex items-center justify-between border-b border-white/10 glass-effect">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          className="flex items-center space-x-2"
+        >
+          <div className="w-8 h-8 rounded-lg gradient-ai flex items-center justify-center">
+            <Brain className="w-4 h-4 text-white" />
+          </div>
+          <span className="text-lg font-semibold text-gradient">
+            lantianlaoli转型Web3 x AI的超级小窝
+          </span>
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => window.location.href = '/admin'}
+            className="glass-effect hover:glow-red"
+          >
+            管理后台
+          </Button>
+        </motion.div>
+      </header>
+
+      {/* Hero Section */}
+      <main className="flex-1 flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-4xl mx-auto text-center space-y-8">
+          {/* Animated Icons */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex justify-center space-x-8 mb-8"
+          >
+            {[
+              { Icon: Brain, color: 'text-purple-500', delay: 0 },
+              { Icon: Zap, color: 'text-yellow-500', delay: 0.2 },
+              { Icon: Globe, color: 'text-blue-500', delay: 0.4 },
+            ].map(({ Icon, color, delay }, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay, duration: 0.5 }}
+                className={`p-4 rounded-full glass-effect animate-float ${color}`}
+                style={{ animationDelay: `${delay}s` }}
+              >
+                <Icon className="w-8 h-8" />
+              </motion.div>
+            ))}
+          </motion.div>
+
+          {/* Main Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="space-y-4"
+          >
+            <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
+              <span className="text-gradient">Web3 x AI</span>
+              <br />
+              <span className="text-slate-900 dark:text-white">转型内容库</span>
+            </h1>
+            <p className="text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+              专业的Web3和AI转型内容分发平台，为您提供最前沿的技术洞察和实战指南
+            </p>
+          </motion.div>
+
+          {/* Email Access Form */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="max-w-md mx-auto"
+          >
+            <Card className="glass-effect border-white/20 animate-glow">
+              <CardHeader className="text-center">
+                <CardTitle className="flex items-center justify-center space-x-2">
+                  <Mail className="w-5 h-5 text-primary" />
+                  <span>输入邮箱访问内容</span>
+                </CardTitle>
+                <CardDescription>
+                  输入您的邮箱地址以访问专属内容
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form onSubmit={handleEmailSubmit} className="space-y-4">
+                  <Input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="text-center glass-effect border-white/30"
+                    required
+                  />
+                  <Button 
+                    type="submit" 
+                    className="w-full gradient-ai hover:scale-105 transition-transform glow-red"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>检查中...</span>
+                      </div>
+                    ) : (
+                      <div className="flex items-center space-x-2">
+                        <span>访问内容</span>
+                        <ArrowRight className="w-4 h-4" />
+                      </div>
+                    )}
+                  </Button>
+                </form>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Features */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl mx-auto mt-12"
+          >
+            {[
+              {
+                icon: Brain,
+                title: 'AI 驱动内容',
+                description: '基于AI技术的内容生成和优化',
+                color: 'glow-purple'
+              },
+              {
+                icon: Globe,
+                title: 'Web3 生态',
+                description: '深度融合Web3技术和应用场景',
+                color: 'glow-cyan'
+              },
+              {
+                icon: Sparkles,
+                title: '专业指导',
+                description: '来自行业专家的实战经验分享',
+                color: 'glow-red'
+              }
+            ].map((feature, index) => (
+              <Card key={index} className={`glass-effect border-white/20 hover:${feature.color} transition-all duration-300`}>
+                <CardHeader className="text-center">
+                  <feature.icon className="w-8 h-8 mx-auto text-primary mb-2" />
+                  <CardTitle className="text-lg">{feature.title}</CardTitle>
+                  <CardDescription>{feature.description}</CardDescription>
+                </CardHeader>
+              </Card>
+            ))}
+          </motion.div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer className="border-t border-white/10 glass-effect px-4 py-6">
+        <div className="max-w-4xl mx-auto text-center text-sm text-slate-500">
+          <p>&copy; 2024 lantianlaoli转型Web3 x AI的超级小窝. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  );
+}
