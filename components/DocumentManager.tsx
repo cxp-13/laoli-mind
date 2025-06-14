@@ -35,6 +35,90 @@ interface DocumentManagerProps {
   onRefresh: () => void;
 }
 
+interface DocumentFormProps {
+  formData: {
+    title: string;
+    introduction: string;
+    thank_you_content: string;
+    notification_link: string;
+  };
+  isLoading: boolean;
+  isEdit: boolean;
+  onSubmit: (e: React.FormEvent) => void;
+  onInputChange: (field: keyof DocumentFormProps['formData'], value: string) => void;
+  onCancel: () => void;
+}
+
+const DocumentForm = ({ formData, isLoading, isEdit, onSubmit, onInputChange, onCancel }: DocumentFormProps) => (
+  <form onSubmit={onSubmit} className="space-y-4">
+    <div className="space-y-2">
+      <Label htmlFor={`title-${isEdit ? 'edit' : 'create'}`}>标题 *</Label>
+      <Input
+        id={`title-${isEdit ? 'edit' : 'create'}`}
+        value={formData.title}
+        onChange={(e) => onInputChange('title', e.target.value)}
+        placeholder="输入文档标题"
+        required
+      />
+    </div>
+
+    <div className="space-y-2">
+      <Label htmlFor={`introduction-${isEdit ? 'edit' : 'create'}`}>简介 *</Label>
+      <Textarea
+        id={`introduction-${isEdit ? 'edit' : 'create'}`}
+        value={formData.introduction}
+        onChange={(e) => onInputChange('introduction', e.target.value)}
+        placeholder="输入文档简介"
+        rows={3}
+        required
+      />
+    </div>
+
+    <div className="space-y-2">
+      <Label htmlFor={`notification_link-${isEdit ? 'edit' : 'create'}`}>文档链接 *</Label>
+      <Input
+        id={`notification_link-${isEdit ? 'edit' : 'create'}`}
+        type="url"
+        value={formData.notification_link}
+        onChange={(e) => onInputChange('notification_link', e.target.value)}
+        placeholder="https://example.com/document"
+        required
+      />
+    </div>
+
+    <div className="space-y-2">
+      <Label htmlFor={`thank_you_content-${isEdit ? 'edit' : 'create'}`}>感谢邮件内容</Label>
+      <Textarea
+        id={`thank_you_content-${isEdit ? 'edit' : 'create'}`}
+        value={formData.thank_you_content}
+        onChange={(e) => onInputChange('thank_you_content', e.target.value)}
+        placeholder="输入感谢邮件的内容（可选）"
+        rows={4}
+      />
+    </div>
+
+    <div className="flex justify-end space-x-2 pt-4">
+      <Button
+        type="button"
+        variant="outline"
+        onClick={onCancel}
+      >
+        取消
+      </Button>
+      <Button type="submit" disabled={isLoading} className="gradient-ai">
+        {isLoading ? (
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            <span>{isEdit ? '更新中...' : '创建中...'}</span>
+          </div>
+        ) : (
+          isEdit ? '更新文档' : '创建文档'
+        )}
+      </Button>
+    </div>
+  </form>
+);
+
 export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -179,80 +263,6 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
     resetForm();
   };
 
-  const DocumentForm = ({ onSubmit, isEdit = false }: { onSubmit: (e: React.FormEvent) => void; isEdit?: boolean }) => (
-    <form onSubmit={onSubmit} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor={`title-${isEdit ? 'edit' : 'create'}`}>标题 *</Label>
-        <Input
-          id={`title-${isEdit ? 'edit' : 'create'}`}
-          value={formData.title}
-          onChange={(e) => handleInputChange('title', e.target.value)}
-          placeholder="输入文档标题"
-          required
-          autoComplete="off"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor={`introduction-${isEdit ? 'edit' : 'create'}`}>简介 *</Label>
-        <Textarea
-          id={`introduction-${isEdit ? 'edit' : 'create'}`}
-          value={formData.introduction}
-          onChange={(e) => handleInputChange('introduction', e.target.value)}
-          placeholder="输入文档简介"
-          rows={3}
-          required
-          autoComplete="off"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor={`notification_link-${isEdit ? 'edit' : 'create'}`}>文档链接 *</Label>
-        <Input
-          id={`notification_link-${isEdit ? 'edit' : 'create'}`}
-          type="url"
-          value={formData.notification_link}
-          onChange={(e) => handleInputChange('notification_link', e.target.value)}
-          placeholder="https://example.com/document"
-          required
-          autoComplete="off"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor={`thank_you_content-${isEdit ? 'edit' : 'create'}`}>感谢邮件内容</Label>
-        <Textarea
-          id={`thank_you_content-${isEdit ? 'edit' : 'create'}`}
-          value={formData.thank_you_content}
-          onChange={(e) => handleInputChange('thank_you_content', e.target.value)}
-          placeholder="输入感谢邮件的内容（可选）"
-          rows={4}
-          autoComplete="off"
-        />
-      </div>
-
-      <div className="flex justify-end space-x-2 pt-4">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={() => handleDialogClose(isEdit)}
-        >
-          取消
-        </Button>
-        <Button type="submit" disabled={isLoading} className="gradient-ai">
-          {isLoading ? (
-            <div className="flex items-center space-x-2">
-              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              <span>{isEdit ? '更新中...' : '创建中...'}</span>
-            </div>
-          ) : (
-            isEdit ? '更新文档' : '创建文档'
-          )}
-        </Button>
-      </div>
-    </form>
-  );
-
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -273,7 +283,14 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
             <DialogHeader>
               <DialogTitle className="text-gradient">创建新文档</DialogTitle>
             </DialogHeader>
-            <DocumentForm onSubmit={handleCreate} />
+            <DocumentForm
+              formData={formData}
+              isLoading={isLoading}
+              isEdit={false}
+              onSubmit={handleCreate}
+              onInputChange={handleInputChange}
+              onCancel={() => handleDialogClose(false)}
+            />
           </DialogContent>
         </Dialog>
       </div>
@@ -367,7 +384,14 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
           <DialogHeader>
             <DialogTitle className="text-gradient">编辑文档</DialogTitle>
           </DialogHeader>
-          <DocumentForm onSubmit={handleUpdate} isEdit={true} />
+          <DocumentForm
+            formData={formData}
+            isLoading={isLoading}
+            isEdit={true}
+            onSubmit={handleUpdate}
+            onInputChange={handleInputChange}
+            onCancel={() => handleDialogClose(true)}
+          />
         </DialogContent>
       </Dialog>
     </div>

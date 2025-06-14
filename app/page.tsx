@@ -11,6 +11,9 @@ import { toast } from 'sonner';
 export default function Home() {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [showPwdModal, setShowPwdModal] = useState(false);
+  const [adminPwd, setAdminPwd] = useState('');
+  const [pwdLoading, setPwdLoading] = useState(false);
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -44,6 +47,28 @@ export default function Home() {
     }
   };
 
+  const handleAdminLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPwdLoading(true);
+    try {
+      const res = await fetch('/api/admin-login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password: adminPwd }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        window.location.href = '/admin';
+      } else {
+        toast.error(data.error || '密码错误');
+      }
+    } catch {
+      toast.error('校验失败，请重试');
+    } finally {
+      setPwdLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
@@ -68,7 +93,7 @@ export default function Home() {
           <Button 
             variant="outline" 
             size="sm"
-            onClick={() => window.location.href = '/admin'}
+            onClick={() => setShowPwdModal(true)}
             className="glass-effect hover:glow-red"
           >
             管理后台
@@ -214,6 +239,41 @@ export default function Home() {
           <p>&copy; 2024 lantianlaoli转型Web3 x AI的超级小窝. All rights reserved.</p>
         </div>
       </footer>
+
+      {/* 密码弹窗 */}
+      {showPwdModal && (
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-slate-900 rounded-lg p-6 shadow-lg w-full max-w-xs">
+            <form onSubmit={handleAdminLogin} className="space-y-4">
+              <div>
+                <label className="block mb-2 font-medium">请输入后台密码</label>
+                <Input
+                  type="password"
+                  value={adminPwd}
+                  onChange={e => setAdminPwd(e.target.value)}
+                  autoFocus
+                  required
+                />
+              </div>
+              <div className="flex justify-end space-x-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setShowPwdModal(false);
+                    setAdminPwd('');
+                  }}
+                >
+                  取消
+                </Button>
+                <Button type="submit" disabled={pwdLoading}>
+                  {pwdLoading ? '校验中...' : '进入后台'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

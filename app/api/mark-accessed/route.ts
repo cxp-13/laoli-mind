@@ -41,9 +41,11 @@ export async function POST(request: NextRequest) {
     } else if (document && document.thank_you_content) {
       // Send thank you email if content is provided
       try {
+
+        console.log('Sending thank you email...', document.thank_you_content);
         await sendThankYouEmail(
           email,
-          `感谢访问：${document.title}`,
+          `欢迎登船｜🖐️请查收lantianlaoli《${document.title}》`,
           document.thank_you_content
         );
       } catch (emailError) {

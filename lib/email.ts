@@ -8,8 +8,9 @@ export async function sendThankYouEmail(
   content: string
 ) {
   try {
+    console.log('Sending email:', to, subject, content);
     const { data, error } = await resend.emails.send({
-      from: 'noreply@lantianlaoli.com',
+      from: 'onboarding@resend.dev',
       to: [to],
       subject,
       html: content,

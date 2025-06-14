@@ -173,7 +173,7 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                   value={formData.document_id}
                   onValueChange={(value) => setFormData({ ...formData, document_id: value })}
                 >
-                  <SelectTrigger>
+                  <SelectTrigger id="document">
                     <SelectValue placeholder="选择要分配的文档" />
                   </SelectTrigger>
                   <SelectContent>
