@@ -98,7 +98,7 @@ export default function AccessPage() {
   }
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen w-full flex flex-col bg-gradient-to-br from-black via-emerald-900 to-black">
       {/* Header */}
       <header className="px-4 lg:px-6 h-16 flex items-center justify-between border-b border-white/10 glass-effect">
         <div className="flex items-center space-x-4">
@@ -111,10 +111,7 @@ export default function AccessPage() {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
-          <div className="flex items-center space-x-2">
-            <Brain className="w-6 h-6 text-primary" />
-            <span className="font-semibold text-gradient">Exclusive Content Access</span>
-          </div>
+        
         </div>
         <Badge variant="outline" className="glass-effect">
           {email}
@@ -125,14 +122,14 @@ export default function AccessPage() {
       <main className="px-4 py-8">
         <div className="max-w-4xl mx-auto">
           {documents.length === 0 ? (
-            <Card className="glass-effect border-white/20 text-center py-12">
+            <Card className="glass-effect border-emerald-700 text-center py-12 bg-black/70">
               <CardContent>
                 <div className="space-y-4">
-                  <div className="w-16 h-16 rounded-full gradient-ai-subtle flex items-center justify-center mx-auto">
-                    <Brain className="w-8 h-8 text-primary" />
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto bg-gradient-to-br from-emerald-400 to-lime-400">
+                    <Brain className="w-8 h-8 text-black" />
                   </div>
-                  <h3 className="text-xl font-semibold">No accessible content</h3>
-                  <p className="text-slate-600">
+                  <h3 className="text-xl font-semibold text-emerald-300">No accessible content</h3>
+                  <p className="text-white/80">
                     You currently have no accessible documents. Please contact the administrator.
                   </p>
                 </div>
@@ -141,9 +138,9 @@ export default function AccessPage() {
           ) : (
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <h1 className="text-3xl font-bold text-gradient">Your Exclusive Content</h1>
-                <p className="text-slate-600">
-                  You have <span className="font-semibold text-primary">{documents.length}</span> accessible documents
+                <h1 className="text-3xl md:text-5xl font-extrabold text-emerald-400 drop-shadow-lg">Your Exclusive Content</h1>
+                <p className="text-lg text-white/80">
+                  You have <span className="font-bold text-emerald-300">{documents.length}</span> accessible documents
                 </p>
               </div>
 
@@ -155,10 +152,10 @@ export default function AccessPage() {
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.1 }}
                   >
-                    <Card className="glass-effect border-white/20 hover:glow-red transition-all duration-300 h-full">
+                    <Card className="glass-effect border-emerald-700 hover:glow-green transition-all duration-300 h-full bg-black/70">
                       <CardHeader>
                         <div className="flex items-start justify-between">
-                          <CardTitle className="text-lg line-clamp-2">
+                          <CardTitle className="text-lg line-clamp-2 text-emerald-300">
                             {doc.title}
                           </CardTitle>
                           {!doc.first_access && (
@@ -168,14 +165,14 @@ export default function AccessPage() {
                             </Badge>
                           )}
                         </div>
-                        <CardDescription className="line-clamp-3">
+                        <CardDescription className="line-clamp-3 text-white/80">
                           {doc.introduction}
                         </CardDescription>
                       </CardHeader>
                       <CardContent>
                         <Button
                           onClick={() => handleDocumentAccess(doc)}
-                          className="w-full gradient-ai hover:scale-105 transition-transform"
+                          className="w-full bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold hover:from-emerald-400 hover:to-green-400 hover:text-white transition-transform"
                         >
                           <ExternalLink className="w-4 h-4 mr-2" />
                           View Document

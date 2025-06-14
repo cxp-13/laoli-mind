@@ -1,14 +1,15 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Brain, Zap, Globe, Mail, ArrowRight, Sparkles, User, Calendar, CheckCircle, Star } from 'lucide-react';
+import { Brain, Zap, Globe, Mail, ArrowRight, Sparkles, User, Calendar, CheckCircle, Star, DollarSign } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
+import clsx from 'clsx';
 
 interface Testimonial {
   id: string;
@@ -19,6 +20,11 @@ interface Testimonial {
   first_access: boolean;
 }
 
+const EMAIL_SUFFIXES = [
+  '@gmail.com', '@qq.com', '@163.com', '@126.com', '@outlook.com',
+  '@hotmail.com', '@icloud.com', '@yahoo.com', '@foxmail.com', '@protonmail.com'
+];
+
 export default function Home() {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -26,6 +32,10 @@ export default function Home() {
   const [adminPwd, setAdminPwd] = useState('');
   const [pwdLoading, setPwdLoading] = useState(false);
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   useEffect(() => {
     fetchTestimonials();
@@ -97,130 +107,99 @@ export default function Home() {
     }
   };
 
-  const maskEmail = (email: string) => {
-    const [username, domain] = email.split('@');
-    if (username.length <= 2) return email;
-    const maskedUsername = username[0] + '*'.repeat(username.length - 2) + username[username.length - 1];
-    return `${maskedUsername}@${domain}`;
+  // 实时补全逻辑
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setEmail(value);
+
+    // 只在没有@或@后没有内容时显示建议
+    const atIndex = value.indexOf('@');
+    if (atIndex === -1) {
+      setSuggestions(EMAIL_SUFFIXES.map(suffix => value + suffix));
+      setShowSuggestions(true);
+    } else if (atIndex === value.length - 1) {
+      setSuggestions(EMAIL_SUFFIXES.map(suffix => value.split('@')[0] + suffix));
+      setShowSuggestions(true);
+    } else {
+      setShowSuggestions(false);
+    }
+  };
+
+  // 选择建议
+  const handleSuggestionClick = (suggestion: string) => {
+    setEmail(suggestion);
+    setShowSuggestions(false);
+    inputRef.current?.focus();
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="px-4 lg:px-6 h-16 flex items-center justify-between border-b border-white/10 glass-effect">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-emerald-900 to-black">
+      <header className="relative z-10 flex items-center justify-between px-6 py-6 w-full">
         <div />
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
+        <Button
+          variant="outline"
+          className="fixed top-8 right-8 z-50 rounded-full border-emerald-400 bg-black/60 text-emerald-300 hover:bg-emerald-900 active:scale-95 transition-all shadow"
+          onClick={() => setShowPwdModal(true)}
         >
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => setShowPwdModal(true)}
-            className="glass-effect hover:glow-red"
-          >
-            Admin Panel
-          </Button>
-        </motion.div>
+          Admin Panel
+        </Button>
       </header>
-
-      {/* Hero Section */}
-      <main className="flex-1 flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-4xl mx-auto text-center space-y-8">
-          {/* Animated Icons */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex justify-center space-x-8 mb-8"
+      <div className="text-center mt-24">
+        <h1 className="text-6xl md:text-8xl font-extrabold text-emerald-400 drop-shadow-lg tracking-tight font-manrope">
+          lantianlaoli
+        </h1>
+        <div className="mt-4 text-2xl md:text-3xl font-semibold text-white/80 font-inter">
+          Notion Super Warehouse
+        </div>
+      </div>
+      <div className="w-full max-w-xl mx-auto mt-16">
+        <form
+          className="flex items-center gap-2 bg-black/70 rounded-2xl p-4 shadow-lg border border-emerald-700 glass-effect relative"
+          onSubmit={handleEmailSubmit}
+        >
+          <input
+            ref={inputRef}
+            type="email"
+            value={email}
+            onChange={handleEmailChange}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setTimeout(() => setIsInputFocused(false), 100)}
+            placeholder="Enter your email to get access"
+            className="flex-1 px-5 py-3 rounded-full border-none bg-black/80 text-white text-lg font-inter focus:ring-2 focus:ring-emerald-400 transition-all placeholder:text-gray-400"
+            autoComplete="off"
+            required
+          />
+          <button
+            type="submit"
+            className="rounded-full px-8 py-3 bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold text-lg shadow-lg flex items-center gap-2 hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all"
           >
-            {[
-              { Icon: Brain, color: 'text-purple-500', delay: 0 },
-              { Icon: Zap, color: 'text-yellow-500', delay: 0.2 },
-              { Icon: Globe, color: 'text-blue-500', delay: 0.4 },
-            ].map(({ Icon, color, delay }, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay, duration: 0.5 }}
-                className={`p-4 rounded-full glass-effect animate-float ${color}`}
-                style={{ animationDelay: `${delay}s` }}
-              >
-                <Icon className="w-8 h-8" />
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Main Title */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="space-y-4"
-          >
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight">
-              Notion Super Warehouse in Lantianlaoli
-            </h1>
-
-          </motion.div>
-
-          {/* Email Access Form */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="max-w-md mx-auto"
-          >
-            <Card className="glass-effect border-white/20 animate-glow">
-              <CardHeader className="text-center">
-                <CardTitle className="flex items-center justify-center space-x-2">
-                  <Mail className="w-5 h-5 text-primary" />
-                  <span>Enter your email to access content</span>
-                </CardTitle>
-
-              </CardHeader>
-              <CardContent>
-                <form onSubmit={handleEmailSubmit} className="space-y-4">
-                  <Input
-                    type="email"
-                    placeholder="your@email.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="text-center glass-effect border-white/30"
-                    required
-                  />
-                  <Button
-                    type="submit"
-                    className="w-full gradient-ai hover:scale-105 transition-transform glow-red"
-                    disabled={isLoading}
+            <Zap className="w-5 h-5" />
+            Profit Now
+          </button>
+          {/* 补全建议下拉 */}
+          {isInputFocused && showSuggestions && suggestions.length > 0 && (
+            <>
+              {/* 点击空白收起 */}
+              <div
+                className="fixed inset-0 z-10"
+                onMouseDown={() => setShowSuggestions(false)}
+                aria-hidden="true"
+              />
+              <ul className="absolute left-0 right-0 top-full mt-2 bg-black/90 border border-emerald-700 rounded-xl shadow-lg z-20">
+                {suggestions.map(s => (
+                  <li
+                    key={s}
+                    className="px-5 py-2 text-white hover:bg-emerald-600 cursor-pointer transition"
+                    onMouseDown={() => handleSuggestionClick(s)}
                   >
-                    {isLoading ? (
-                      <div className="flex items-center space-x-2">
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        <span>Checking...</span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center space-x-2">
-                        <span>Access Content</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </div>
-                    )}
-                  </Button>
-                </form>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-      </main>
-
-      {/* Footer */}
-      <footer className="border-t border-white/10 glass-effect px-4 py-6">
-        <div className="max-w-4xl mx-auto text-center text-sm text-slate-500">
-          {/* Footer intentionally left blank as per user request */}
-        </div>
-      </footer>
-
-      {/* 密码弹窗 */}
+                    {s}
+                  </li>
+                ))}
+              </ul>
+            </>
+          )}
+        </form>
+      </div>
       {showPwdModal && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-slate-900 rounded-lg p-6 shadow-lg w-full max-w-xs">
