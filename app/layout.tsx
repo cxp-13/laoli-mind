@@ -14,10 +14,25 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'lantianlaoli Web3 x AI Transformation Hub',
-  description: 'A content distribution platform focused on Web3 and AI transformation, empowering digital transformation.',
-  keywords: ['Web3', 'AI', 'transformation', 'content distribution', 'digitalization'],
+  title: 'LaoliMind',
+  description: 'LaoliMind is a premium content platform delivering Notion-based insights on AI and Web3 for high-level thinkers. Empower your transformation with curated knowledge.',
+  keywords: [
+    'LaoliMind',
+    'Notion',
+    'Web3',
+    'AI',
+    'knowledge platform',
+    'digital transformation',
+    'curated insights',
+    'premium content',
+    'cognitive upgrade',
+    'notion templates',
+  ],
+  icons: {
+    icon: '/favicon.png',
+  },
 };
+
 
 export default function RootLayout({
   children,

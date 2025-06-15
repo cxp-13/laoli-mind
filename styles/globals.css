@@ -1,6 +1,7 @@
 .profit-btn:hover {
   box-shadow: 0 0 32px 8px #34d399, 0 0 64px 16px #bef264;
-  animation: profit-glow 0.5s alternate infinite;
+  animation: profit-glow 0.5s alternate infinite, profit-rumble 0.18s linear infinite;
+  border: 2px solid #34d399;
 }
 .profit-btn:hover .profit-zap {
   animation: zap-shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
@@ -16,4 +17,17 @@
   20%, 80% { transform: translateX(2px); }
   30%, 50%, 70% { transform: translateX(-4px); }
   40%, 60% { transform: translateX(4px); }
+}
+@keyframes profit-rumble {
+  0% { transform: translate(0, 0); }
+  10% { transform: translate(-1px, 1px); }
+  20% { transform: translate(-2px, -1px); }
+  30% { transform: translate(2px, 1px); }
+  40% { transform: translate(1px, -2px); }
+  50% { transform: translate(-1px, 2px); }
+  60% { transform: translate(1px, 1px); }
+  70% { transform: translate(-1px, -1px); }
+  80% { transform: translate(2px, 2px); }
+  90% { transform: translate(-2px, 1px); }
+  100% { transform: translate(0, 0); }
 } 

@@ -133,8 +133,12 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-black via-emerald-900 to-black relative">
-      <header className="absolute top-0 left-0 w-full flex items-center justify-end px-6 py-6 z-10">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-red-600 via-emerald-900 to-black relative">
+      <header className="absolute top-0 left-0 w-full flex items-center justify-between px-6 py-6 z-10">
+        <div className="flex items-center gap-2">
+          <Brain className="w-8 h-8 text-emerald-400" />
+          <span className="text-2xl font-bold text-emerald-400">LaoliMind</span>
+        </div>
         <Button
           variant="outline"
           className="rounded-full border-emerald-400 bg-black/60 text-emerald-300 hover:bg-emerald-900 active:scale-95 transition-all shadow"
@@ -145,10 +149,10 @@ export default function Home() {
       </header>
       <div className="flex flex-col items-center justify-center flex-1 w-full h-full absolute top-0 left-0 right-0 bottom-0">
         <h1 className="text-6xl md:text-8xl font-extrabold text-emerald-400 drop-shadow-lg tracking-tight font-manrope text-center">
-          lantianlaoli
+          LaoliMind
         </h1>
         <div className="mt-4 text-2xl md:text-3xl font-semibold text-white/80 font-inter text-center">
-          Notion Super Warehouse
+          From <span className="text-[#FE2349] font-bold">Rednote</span> to <span className="text-black font-bold">Notion</span>, Seamlessly
         </div>
         <div className="w-full max-w-xl mx-auto mt-16 flex justify-center">
           <form
@@ -169,12 +173,12 @@ export default function Home() {
             />
             <button
               type="submit"
-              className="profit-btn rounded-full px-8 py-3 bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold text-lg shadow-lg flex items-center gap-2 hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all relative overflow-hidden"
+              className="rounded-full px-8 py-3 bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold text-lg shadow-lg flex items-center gap-2  active:scale-95 transition-all relative overflow-hidden profit-btn"
             >
               <span className="relative flex items-center">
                 <Zap className="w-5 h-5 profit-zap transition-transform duration-200" />
               </span>
-              Profit Now
+              Unlock Access
             </button>
             {/* 补全建议下拉 */}
             {isInputFocused && showSuggestions && suggestions.length > 0 && (
