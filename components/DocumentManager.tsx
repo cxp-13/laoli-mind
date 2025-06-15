@@ -20,15 +20,9 @@ import {
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
+import { Document } from '@/app/types';
 
-interface Document {
-  id: string;
-  title: string;
-  introduction: string;
-  thank_you_content: string;
-  notification_link: string;
-  created_at: string;
-}
+
 
 interface DocumentManagerProps {
   documents: Document[];
@@ -39,8 +33,7 @@ interface DocumentFormProps {
   formData: {
     title: string;
     introduction: string;
-    thank_you_content: string;
-    notification_link: string;
+    link: string;
   };
   isLoading: boolean;
   isEdit: boolean;
@@ -52,18 +45,19 @@ interface DocumentFormProps {
 const DocumentForm = ({ formData, isLoading, isEdit, onSubmit, onInputChange, onCancel }: DocumentFormProps) => (
   <form onSubmit={onSubmit} className="space-y-4">
     <div className="space-y-2">
-      <Label htmlFor={`title-${isEdit ? 'edit' : 'create'}`}>Title *</Label>
+      <Label htmlFor={`title-${isEdit ? 'edit' : 'create'}`} className="text-emerald-300">Title *</Label>
       <Input
         id={`title-${isEdit ? 'edit' : 'create'}`}
         value={formData.title}
         onChange={(e) => onInputChange('title', e.target.value)}
         placeholder="Enter document title"
         required
+        className="glass-effect border-emerald-700/30 text-emerald-300 placeholder:text-emerald-300/50"
       />
     </div>
 
     <div className="space-y-2">
-      <Label htmlFor={`introduction-${isEdit ? 'edit' : 'create'}`}>Introduction *</Label>
+      <Label htmlFor={`introduction-${isEdit ? 'edit' : 'create'}`} className="text-emerald-300">Introduction *</Label>
       <Textarea
         id={`introduction-${isEdit ? 'edit' : 'create'}`}
         value={formData.introduction}
@@ -71,29 +65,20 @@ const DocumentForm = ({ formData, isLoading, isEdit, onSubmit, onInputChange, on
         placeholder="Enter document introduction"
         rows={3}
         required
+        className="glass-effect border-emerald-700/30 text-emerald-300 placeholder:text-emerald-300/50"
       />
     </div>
 
     <div className="space-y-2">
-      <Label htmlFor={`notification_link-${isEdit ? 'edit' : 'create'}`}>Document Link *</Label>
+      <Label htmlFor={`link-${isEdit ? 'edit' : 'create'}`} className="text-emerald-300">Document Link *</Label>
       <Input
-        id={`notification_link-${isEdit ? 'edit' : 'create'}`}
+        id={`link-${isEdit ? 'edit' : 'create'}`}
         type="url"
-        value={formData.notification_link}
-        onChange={(e) => onInputChange('notification_link', e.target.value)}
+        value={formData.link}
+        onChange={(e) => onInputChange('link', e.target.value)}
         placeholder="https://example.com/document"
         required
-      />
-    </div>
-
-    <div className="space-y-2">
-      <Label htmlFor={`thank_you_content-${isEdit ? 'edit' : 'create'}`}>Thank You Email Content</Label>
-      <Textarea
-        id={`thank_you_content-${isEdit ? 'edit' : 'create'}`}
-        value={formData.thank_you_content}
-        onChange={(e) => onInputChange('thank_you_content', e.target.value)}
-        placeholder="Enter thank you email content (optional)"
-        rows={4}
+        className="glass-effect border-emerald-700/30 text-emerald-300 placeholder:text-emerald-300/50"
       />
     </div>
 
@@ -102,10 +87,11 @@ const DocumentForm = ({ formData, isLoading, isEdit, onSubmit, onInputChange, on
         type="button"
         variant="outline"
         onClick={onCancel}
+        className="border-emerald-700 text-emerald-300 hover:bg-emerald-900"
       >
         Cancel
       </Button>
-      <Button type="submit" disabled={isLoading} className="gradient-ai">
+      <Button type="submit" disabled={isLoading} className="bg-gradient-to-r from-emerald-500 to-lime-400 text-black hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all">
         {isLoading ? (
           <div className="flex items-center space-x-2">
             <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -127,16 +113,14 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
   const [formData, setFormData] = useState({
     title: '',
     introduction: '',
-    thank_you_content: '',
-    notification_link: '',
+    link: '',
   });
 
   const resetForm = () => {
     setFormData({
       title: '',
       introduction: '',
-      thank_you_content: '',
-      notification_link: '',
+      link: '',
     });
   };
 
@@ -149,7 +133,7 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!formData.title || !formData.introduction || !formData.notification_link) {
+    if (!formData.title || !formData.introduction || !formData.link) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -187,15 +171,14 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
     setFormData({
       title: doc.title,
       introduction: doc.introduction,
-      thank_you_content: doc.thank_you_content,
-      notification_link: doc.notification_link,
+      link: doc.link,
     });
     setIsEditDialogOpen(true);
   };
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!editingDoc || !formData.title || !formData.introduction || !formData.notification_link) {
+    if (!editingDoc || !formData.title || !formData.introduction || !formData.link) {
       toast.error('Please fill in all required fields');
       return;
     }
@@ -268,20 +251,20 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gradient">Document Management</h2>
-          <p className="text-muted-foreground">Manage your content documents</p>
+          <h2 className="text-2xl font-bold text-emerald-400">Document Management</h2>
+          <p className="text-emerald-300/70">Manage your content documents</p>
         </div>
         
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="gradient-ai hover:scale-105 transition-transform glow-red">
+            <Button className="bg-gradient-to-r from-emerald-500 to-lime-400 text-black hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all">
               <Plus className="w-4 h-4 mr-2" />
               New Document
             </Button>
           </DialogTrigger>
-          <DialogContent className="glass-effect border-white/20 max-w-2xl">
+          <DialogContent className="glass-effect border-emerald-700/30 max-w-2xl">
             <DialogHeader>
-              <DialogTitle className="text-gradient">Create New Document</DialogTitle>
+              <DialogTitle className="text-emerald-400">Create New Document</DialogTitle>
             </DialogHeader>
             <DocumentForm
               formData={formData}
@@ -297,15 +280,15 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
 
       {/* Documents Grid */}
       {documents.length === 0 ? (
-        <Card className="glass-effect border-white/20 text-center py-12">
+        <Card className="glass-effect border-emerald-700/30 text-center py-12">
           <CardContent>
             <div className="space-y-4">
-              <div className="w-16 h-16 rounded-full gradient-ai-subtle flex items-center justify-center mx-auto">
-                <AlertCircle className="w-8 h-8 text-muted-foreground" />
+              <div className="w-16 h-16 rounded-full bg-emerald-900/50 flex items-center justify-center mx-auto">
+                <AlertCircle className="w-8 h-8 text-emerald-400" />
               </div>
-              <h3 className="text-xl font-semibold">No documents</h3>
-              <p className="text-muted-foreground max-w-md mx-auto">
-                No documents have been created yet. Click the "New Document" button above to create your first document.
+              <h3 className="text-xl font-semibold text-emerald-300">No documents</h3>
+              <p className="text-emerald-300/70 max-w-md mx-auto">
+                No documents have been created yet. Click the &quot;New Document&quot; button above to create your first document.
               </p>
             </div>
           </CardContent>
@@ -321,10 +304,10 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ delay: index * 0.1 }}
               >
-                <Card className="glass-effect border-white/20 hover:glow-red transition-all duration-300 h-full">
+                <Card className="glass-effect border-emerald-700/30 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-300 h-full">
                   <CardHeader>
                     <div className="flex items-start justify-between">
-                      <CardTitle className="text-lg line-clamp-2 flex-1">
+                      <CardTitle className="text-lg line-clamp-2 flex-1 text-emerald-300">
                         {doc.title}
                       </CardTitle>
                       <div className="flex space-x-1 ml-2">
@@ -332,7 +315,7 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
                           size="sm"
                           variant="ghost"
                           onClick={() => handleEdit(doc)}
-                          className="hover:bg-purple-500/20"
+                          className="hover:bg-emerald-900 text-emerald-400"
                         >
                           <Edit className="w-4 h-4" />
                         </Button>
@@ -348,11 +331,11 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
                     </div>
                   </CardHeader>
                   <CardContent className="space-y-4">
-                    <p className="text-sm text-muted-foreground line-clamp-3">
+                    <p className="text-sm text-emerald-300/70 line-clamp-3">
                       {doc.introduction}
                     </p>
                     
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                    <div className="flex items-center justify-between text-xs text-emerald-300/70">
                       <div className="flex items-center space-x-1">
                         <Calendar className="w-3 h-3" />
                         <span>
@@ -364,8 +347,8 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => window.open(doc.notification_link, '_blank')}
-                      className="w-full glass-effect"
+                      onClick={() => window.open(doc.link, '_blank')}
+                      className="w-full glass-effect border-emerald-700/30 text-emerald-300 hover:bg-emerald-900"
                     >
                       <ExternalLink className="w-4 h-4 mr-2" />
                       View Document
@@ -380,9 +363,9 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="glass-effect border-white/20 max-w-2xl">
+        <DialogContent className="glass-effect border-emerald-700/30 max-w-2xl">
           <DialogHeader>
-            <DialogTitle className="text-gradient">Edit Document</DialogTitle>
+            <DialogTitle className="text-emerald-400">Edit Document</DialogTitle>
           </DialogHeader>
           <DocumentForm
             formData={formData}

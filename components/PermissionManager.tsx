@@ -21,15 +21,9 @@ import {
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
+import { Document } from '@/app/types';
 
-interface Document {
-  id: string;
-  title: string;
-  introduction: string;
-  thank_you_content: string;
-  notification_link: string;
-  created_at: string;
-}
+
 
 interface Permission {
   id: string;
@@ -147,24 +141,24 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-gradient">Permission Management</h2>
-          <p className="text-muted-foreground">Manage user document access permissions</p>
+          <h2 className="text-2xl font-bold text-emerald-400">Permission Management</h2>
+          <p className="text-emerald-300/70">Manage user document access permissions</p>
         </div>
 
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="gradient-ai hover:scale-105 transition-transform glow-purple">
+            <Button className="bg-gradient-to-r from-emerald-500 to-lime-400 text-black hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all">
               <Plus className="w-4 h-4 mr-2" />
               Assign Permission
             </Button>
           </DialogTrigger>
-          <DialogContent className="glass-effect border-white/20">
+          <DialogContent className="glass-effect border-emerald-700/30">
             <DialogHeader>
-              <DialogTitle className="text-gradient">Assign Access Permission</DialogTitle>
+              <DialogTitle className="text-emerald-400">Assign Access Permission</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleCreate} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">User Email *</Label>
+                <Label htmlFor="email" className="text-emerald-300">User Email *</Label>
                 <Input
                   id="email"
                   type="email"
@@ -172,23 +166,24 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="user@example.com"
                   required
+                  className="glass-effect border-emerald-700/30 text-emerald-300 placeholder:text-emerald-300/50"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="document">Select Document *</Label>
+                <Label htmlFor="document" className="text-emerald-300">Select Document *</Label>
                 <Select
                   value={formData.document_id}
                   onValueChange={(value) =>
                     setFormData({ ...formData, document_id: value })
                   }
                 >
-                  <SelectTrigger id="document">
+                  <SelectTrigger id="document" className="glass-effect border-emerald-700/30 text-emerald-300">
                     <SelectValue placeholder="Select a document to assign" >{selectDoc?.title}</SelectValue>
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent className="glass-effect border-emerald-700/30">
                     {documents.map((doc) => (
-                      <SelectItem key={doc.id} value={doc.id}>
+                      <SelectItem key={doc.id} value={doc.id} className="text-emerald-300 hover:bg-emerald-900">
                         {doc.title}
                       </SelectItem>
                     ))}
@@ -204,10 +199,11 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                     setIsCreateDialogOpen(false);
                     resetForm();
                   }}
+                  className="border-emerald-700 text-emerald-300 hover:bg-emerald-900"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isLoading} className="gradient-ai">
+                <Button type="submit" disabled={isLoading} className="bg-gradient-to-r from-emerald-500 to-lime-400 text-black hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all">
                   {isLoading ? (
                     <div className="flex items-center space-x-2">
                       <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -225,14 +221,14 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
 
       {/* Permissions Display */}
       {Object.keys(groupedPermissions).length === 0 ? (
-        <Card className="glass-effect border-white/20 text-center py-12">
+        <Card className="glass-effect border-emerald-700/30 text-center py-12">
           <CardContent>
             <div className="space-y-4">
-              <div className="w-16 h-16 rounded-full gradient-ai-subtle flex items-center justify-center mx-auto">
-                <AlertCircle className="w-8 h-8 text-muted-foreground" />
+              <div className="w-16 h-16 rounded-full bg-emerald-900/50 flex items-center justify-center mx-auto">
+                <AlertCircle className="w-8 h-8 text-emerald-400" />
               </div>
-              <h3 className="text-xl font-semibold">No permissions</h3>
-              <p className="text-muted-foreground max-w-md mx-auto">
+              <h3 className="text-xl font-semibold text-emerald-300">No permissions</h3>
+              <p className="text-emerald-300/70 max-w-md mx-auto">
                 No access permissions have been assigned yet. Click the "Assign Permission" button above to assign document access to users.
               </p>
             </div>
@@ -249,21 +245,21 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ delay: index * 0.05 }}
               >
-                <Card className="glass-effect border-white/20 hover:glow-purple transition-all duration-300">
+                <Card className="glass-effect border-emerald-700/30 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-300">
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-full gradient-ai-subtle flex items-center justify-center">
-                          <Mail className="w-5 h-5 text-primary" />
+                        <div className="w-10 h-10 rounded-full bg-emerald-900/50 flex items-center justify-center">
+                          <Mail className="w-5 h-5 text-emerald-400" />
                         </div>
                         <div>
-                          <CardTitle className="text-lg">{email}</CardTitle>
-                          <p className="text-sm text-muted-foreground">
+                          <CardTitle className="text-lg text-emerald-300">{email}</CardTitle>
+                          <p className="text-sm text-emerald-300/70">
                             {userPermissions.length} document permissions
                           </p>
                         </div>
                       </div>
-                      <Badge variant="secondary">
+                      <Badge variant="secondary" className="bg-emerald-900/50 text-emerald-300">
                         {userPermissions.filter(p => p.first_access).length} Not Accessed
                       </Badge>
                     </div>
@@ -273,11 +269,11 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                       {userPermissions.map((perm) => (
                         <div
                           key={perm.id}
-                          className="flex items-center justify-between p-3 rounded-lg glass-effect border border-white/10"
+                          className="flex items-center justify-between p-3 rounded-lg glass-effect border border-emerald-700/30"
                         >
                           <div className="flex-1">
                             <div className="flex items-center space-x-2">
-                              <h4 className="font-medium">{perm.document_title}</h4>
+                              <h4 className="font-medium text-emerald-300">{perm.document_title}</h4>
                               {perm.first_access ? (
                                 <Badge variant="outline" className="text-yellow-600 border-yellow-300">
                                   <Clock className="w-3 h-3 mr-1" />
@@ -290,7 +286,7 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                                 </Badge>
                               )}
                             </div>
-                            <div className="flex items-center space-x-1 text-xs text-muted-foreground mt-1">
+                            <div className="flex items-center space-x-1 text-xs text-emerald-300/70 mt-1">
                               <Calendar className="w-3 h-3" />
                               <span>
                                 {format(new Date(perm.created_at), 'PPP', { locale: zhCN })}

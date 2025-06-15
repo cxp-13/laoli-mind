@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { Document } from '@/app/types';
+
+type Permission = {
+  document_id: number;
+  first_access: boolean;
+};
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,38 +19,62 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Get user's document permissions with document details
-    const { data: permissions, error } = await supabase
+    // 1. 查询 email_permissions
+    const { data: permissions, error: permError } = await supabase
       .from('email_permissions')
-      .select(`
-        *,
-        documents (
-          id,
-          title,
-          introduction,
-          notification_link,
-          thank_you_content
-        )
-      `)
+      .select('document_id, first_access')
       .eq('email', email);
 
-    if (error) {
-      console.error('Error fetching documents:', error);
+    if (permError) {
+      console.error('Error fetching permissions:', permError);
       return NextResponse.json(
-        { success: false, error: 'Database error' },
+        { success: false, error: 'Database error (permissions)' },
         { status: 500 }
       );
     }
 
-    // Transform the data to include first_access info
-    const documents = permissions?.map(perm => ({
-      ...perm.documents,
-      first_access: perm.first_access,
-    })) || [];
+    // 2. 提取所有 document_id
+    const docIds = Array.from(new Set((permissions || []).map(p => p.document_id)));
 
+    // 3. 查询 documents 表
+    let documentsMap: Record<number, Document> = {};
+    if (docIds.length > 0) {
+      const { data: documents, error: docError } = await supabase
+        .from('documents')
+        .select('id, title, introduction, link, created_at, updated_at') // 👈加上这两个字段
+        .in('id', docIds);
+
+
+      if (docError) {
+        console.error('Error fetching documents:', docError);
+        return NextResponse.json(
+          { success: false, error: 'Database error (documents)' },
+          { status: 500 }
+        );
+      }
+
+      documentsMap = (documents || []).reduce((acc, doc) => {
+        acc[doc.id] = doc;
+        return acc;
+      }, {} as Record<number, Document>);
+    }
+
+    // 4. 合并权限和文档信息
+    const documentsWithAccess = (permissions || [])
+      .map(p => {
+        const doc = documentsMap[p.document_id];
+        if (!doc) return null;
+        return {
+          ...doc,
+          first_access: p.first_access,
+        };
+      })
+      .filter(Boolean); // 去掉 null 的项
+
+    // 5. 返回 JSON
     return NextResponse.json({
       success: true,
-      documents,
+      documents: documentsWithAccess,
     });
   } catch (error) {
     console.error('Error in documents API:', error);

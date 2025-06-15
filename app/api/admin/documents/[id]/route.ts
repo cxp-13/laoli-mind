@@ -6,12 +6,12 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { title, introduction, thank_you_content, notification_link } = await request.json();
+    const { title, introduction, link } = await request.json();
     const { id } = params;
 
-    if (!title || !introduction || !notification_link) {
+    if (!title || !introduction || !link) {
       return NextResponse.json(
-        { success: false, error: 'Title, introduction, and notification_link are required' },
+        { success: false, error: 'Title, introduction, and link are required' },
         { status: 400 }
       );
     }
@@ -21,8 +21,7 @@ export async function PUT(
       .update({
         title,
         introduction,
-        thank_you_content: thank_you_content || '',
-        notification_link,
+        link,
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)

@@ -5,5 +5,5 @@ export async function POST(request: NextRequest) {
   if (password === process.env.ADMIN_PASSWORD) {
     return NextResponse.json({ success: true });
   }
-  return NextResponse.json({ success: false, error: '密码错误' }, { status: 401 });
+  return NextResponse.json({ success: false, error: 'Password error' }, { status: 401 });
 }

@@ -133,101 +133,107 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-black via-emerald-900 to-black">
-      <header className="relative z-10 flex items-center justify-between px-6 py-6 w-full">
-        <div />
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-black via-emerald-900 to-black relative">
+      <header className="absolute top-0 left-0 w-full flex items-center justify-end px-6 py-6 z-10">
         <Button
           variant="outline"
-          className="fixed top-8 right-8 z-50 rounded-full border-emerald-400 bg-black/60 text-emerald-300 hover:bg-emerald-900 active:scale-95 transition-all shadow"
+          className="rounded-full border-emerald-400 bg-black/60 text-emerald-300 hover:bg-emerald-900 active:scale-95 transition-all shadow"
           onClick={() => setShowPwdModal(true)}
         >
           Admin Panel
         </Button>
       </header>
-      <div className="text-center mt-24">
-        <h1 className="text-6xl md:text-8xl font-extrabold text-emerald-400 drop-shadow-lg tracking-tight font-manrope">
+      <div className="flex flex-col items-center justify-center flex-1 w-full h-full absolute top-0 left-0 right-0 bottom-0">
+        <h1 className="text-6xl md:text-8xl font-extrabold text-emerald-400 drop-shadow-lg tracking-tight font-manrope text-center">
           lantianlaoli
         </h1>
-        <div className="mt-4 text-2xl md:text-3xl font-semibold text-white/80 font-inter">
+        <div className="mt-4 text-2xl md:text-3xl font-semibold text-white/80 font-inter text-center">
           Notion Super Warehouse
         </div>
-      </div>
-      <div className="w-full max-w-xl mx-auto mt-16">
-        <form
-          className="flex items-center gap-2 bg-black/70 rounded-2xl p-4 shadow-lg border border-emerald-700 glass-effect relative"
-          onSubmit={handleEmailSubmit}
-        >
-          <input
-            ref={inputRef}
-            type="email"
-            value={email}
-            onChange={handleEmailChange}
-            onFocus={() => setIsInputFocused(true)}
-            onBlur={() => setTimeout(() => setIsInputFocused(false), 100)}
-            placeholder="Enter your email to get access"
-            className="flex-1 px-5 py-3 rounded-full border-none bg-black/80 text-white text-lg font-inter focus:ring-2 focus:ring-emerald-400 transition-all placeholder:text-gray-400"
-            autoComplete="off"
-            required
-          />
-          <button
-            type="submit"
-            className="rounded-full px-8 py-3 bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold text-lg shadow-lg flex items-center gap-2 hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all"
+        <div className="w-full max-w-xl mx-auto mt-16 flex justify-center">
+          <form
+            className="flex items-center gap-2 bg-black/70 rounded-2xl p-4 shadow-lg border border-emerald-700 glass-effect relative"
+            onSubmit={handleEmailSubmit}
           >
-            <Zap className="w-5 h-5" />
-            Profit Now
-          </button>
-          {/* 补全建议下拉 */}
-          {isInputFocused && showSuggestions && suggestions.length > 0 && (
-            <>
-              {/* 点击空白收起 */}
-              <div
-                className="fixed inset-0 z-10"
-                onMouseDown={() => setShowSuggestions(false)}
-                aria-hidden="true"
-              />
-              <ul className="absolute left-0 right-0 top-full mt-2 bg-black/90 border border-emerald-700 rounded-xl shadow-lg z-20">
-                {suggestions.map(s => (
-                  <li
-                    key={s}
-                    className="px-5 py-2 text-white hover:bg-emerald-600 cursor-pointer transition"
-                    onMouseDown={() => handleSuggestionClick(s)}
-                  >
-                    {s}
-                  </li>
-                ))}
-              </ul>
-            </>
-          )}
-        </form>
+            <input
+              ref={inputRef}
+              type="email"
+              value={email}
+              onChange={handleEmailChange}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setTimeout(() => setIsInputFocused(false), 100)}
+              placeholder="Enter your email to get access"
+              className="flex-1 px-5 py-3 rounded-full border-none bg-black/80 text-white text-lg font-inter focus:ring-2 focus:ring-emerald-400 transition-all placeholder:text-gray-400"
+              autoComplete="off"
+              required
+            />
+            <button
+              type="submit"
+              className="profit-btn rounded-full px-8 py-3 bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold text-lg shadow-lg flex items-center gap-2 hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all relative overflow-hidden"
+            >
+              <span className="relative flex items-center">
+                <Zap className="w-5 h-5 profit-zap transition-transform duration-200" />
+              </span>
+              Profit Now
+            </button>
+            {/* 补全建议下拉 */}
+            {isInputFocused && showSuggestions && suggestions.length > 0 && (
+              <>
+                {/* 点击空白收起 */}
+                <div
+                  className="fixed inset-0 z-10"
+                  onMouseDown={() => setShowSuggestions(false)}
+                  aria-hidden="true"
+                />
+                <ul className="absolute left-0 right-0 top-full mt-2 bg-black/90 border border-emerald-700 rounded-xl shadow-lg z-20">
+                  {suggestions.map(s => (
+                    <li
+                      key={s}
+                      className="px-5 py-2 text-white hover:bg-emerald-600 cursor-pointer transition"
+                      onMouseDown={() => handleSuggestionClick(s)}
+                    >
+                      {s}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </form>
+        </div>
       </div>
       {showPwdModal && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-slate-900 rounded-lg p-6 shadow-lg w-full max-w-xs">
-            <form onSubmit={handleAdminLogin} className="space-y-4">
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-gradient-to-br from-black via-emerald-900 to-black rounded-2xl p-8 shadow-2xl w-full max-w-sm">
+            <form onSubmit={handleAdminLogin} className="space-y-6">
               <div>
-                <label className="block mb-2 font-medium">Please enter the admin password</label>
-                <Input
+                <label className="block mb-4 text-lg font-semibold text-emerald-400">Please enter the admin password</label>
+                <input
                   type="password"
                   value={adminPwd}
                   onChange={e => setAdminPwd(e.target.value)}
                   autoFocus
                   required
+                  className="w-full px-5 py-3 rounded-xl bg-black/80 text-white text-lg border-2 border-transparent focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400 outline-none transition-all"
                 />
               </div>
-              <div className="flex justify-end space-x-2">
-                <Button
+              <div className="flex justify-end space-x-3">
+                <button
                   type="button"
-                  variant="outline"
+                  className="px-6 py-2 rounded-full bg-black text-white border border-emerald-500 hover:bg-emerald-900 transition"
                   onClick={() => {
                     setShowPwdModal(false);
                     setAdminPwd('');
                   }}
                 >
                   Cancel
-                </Button>
-                <Button type="submit" disabled={pwdLoading}>
+                </button>
+                <button
+                  type="submit"
+                  className="px-6 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold shadow-lg hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all"
+                  disabled={pwdLoading}
+                >
                   {pwdLoading ? 'Verifying...' : 'Enter Admin Panel'}
-                </Button>
+                </button>
               </div>
             </form>
           </div>

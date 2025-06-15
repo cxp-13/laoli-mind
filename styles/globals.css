@@ -1,0 +1,19 @@
+.profit-btn:hover {
+  box-shadow: 0 0 32px 8px #34d399, 0 0 64px 16px #bef264;
+  animation: profit-glow 0.5s alternate infinite;
+}
+.profit-btn:hover .profit-zap {
+  animation: zap-shake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+  color: #fff700;
+  filter: drop-shadow(0 0 8px #fff700);
+}
+@keyframes profit-glow {
+  0% { box-shadow: 0 0 16px 4px #34d399, 0 0 32px 8px #bef264; }
+  100% { box-shadow: 0 0 32px 8px #34d399, 0 0 64px 16px #bef264; }
+}
+@keyframes zap-shake {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-4px); }
+  40%, 60% { transform: translateX(4px); }
+} 

@@ -8,19 +8,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Brain, ExternalLink, ArrowLeft, Sparkles, CheckCircle, Gift, SettingsIcon as Confetti, Star } from 'lucide-react';
 import { toast } from 'sonner';
+import { Document } from '../types';
 
-interface Document {
-  id: string;
-  title: string;
-  introduction: string;
-  notification_link: string;
-  thank_you_content: string;
-}
 
-interface AccessDocument extends Document {
+export interface AccessDocument extends Document {
   first_access: boolean;
 }
-
 export default function AccessPage() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
@@ -78,7 +71,7 @@ export default function AccessPage() {
   };
 
   const handleDocumentAccess = (doc: AccessDocument) => {
-    window.open(doc.notification_link, '_blank');
+    window.open(doc.link, '_blank');
   };
 
   const closeCelebration = () => {
@@ -88,10 +81,10 @@ export default function AccessPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-emerald-900 to-black">
         <div className="text-center space-y-4">
-          <div className="w-12 h-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin mx-auto" />
-          <p className="text-slate-600">Loading your exclusive content...</p>
+          <div className="w-12 h-12 border-4 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin mx-auto" />
+          <p className="text-emerald-200">Loading your exclusive content...</p>
         </div>
       </div>
     );
@@ -103,12 +96,13 @@ export default function AccessPage() {
       <header className="px-4 lg:px-6 h-16 flex items-center justify-between border-b border-white/10 glass-effect">
         <div className="flex items-center space-x-4">
           <Button
-            variant="ghost"
-            size="sm"
+            variant="outline"
+            size="lg"
             onClick={() => window.history.back()}
-            className="hover:glow-red"
+            className="rounded-full px-6 py-2 bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold text-lg shadow-lg border-none hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all flex items-center gap-2"
+            style={{ minWidth: 120 }}
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
+            <ArrowLeft className="w-6 h-6" />
             Back
           </Button>
         
