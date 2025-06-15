@@ -272,6 +272,22 @@ export default function AccessPage() {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Floating Feedback Button */}
+      <a
+        href="https://docs.google.com/forms/d/e/1FAIpQLSfSgjX5KtEH8aJmOIE2aEbIA0KkvbGaIVdOMrMnUQ5AUUcyBA/viewform"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-6 right-6 z-50"
+        aria-label="Project Feedback Survey"
+      >
+        <button
+          className="flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold shadow-lg hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all focus:outline-none"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v12a2 2 0 01-2 2z" /></svg>
+          Feedback
+        </button>
+      </a>
     </div>
   );
 }
