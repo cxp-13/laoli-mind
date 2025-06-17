@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://laolimind.vercel.app
+
+# Sitemaps
+Sitemap: https://laolimind.vercel.app/sitemap.xml
