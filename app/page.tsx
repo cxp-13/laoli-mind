@@ -152,9 +152,9 @@ export default function Home() {
           LaoliMind
         </h1>
         <div className="mt-4 text-2xl md:text-3xl font-semibold text-white/80 font-inter text-center">
-          From <span className="text-[#FE2349] font-bold">Rednote</span> to <span className="text-black font-bold">Notion</span>, Seamlessly
+          Already bought on <span className="text-[#FE2349] font-bold">Rednote (小红书)</span>? Just enter your email to receive the <span className="text-black font-bold">Notion</span> pack.
         </div>
-        <div className="w-full max-w-xl mx-auto mt-16 flex justify-center">
+        <div className="w-full max-w-4xl mx-auto mt-16 flex justify-center">
           <form
             className="flex items-center gap-2 bg-black/70 rounded-2xl p-4 shadow-lg border border-emerald-700 glass-effect relative"
             onSubmit={handleEmailSubmit}
