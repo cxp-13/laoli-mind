@@ -130,18 +130,7 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <title>LaoliMind | AI & Web3 Transformation Resources</title>
-        <meta name="description" content="Claim your Notion resources after purchase on Xiaohongshu. Curated content for AI & Web3 transformation, always free." />
-        <meta name="robots" content="index, follow" />
-        <meta property="og:title" content="LaoliMind | AI & Web3 Transformation Resources" />
-        <meta property="og:description" content="Claim your Notion documents instantly after Xiaohongshu purchase. Created by Laoli, focused on AI + Web3 learning." />
-        <meta property="og:url" content="https://laolimind.vercel.app/" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="https://laolimind.vercel.app/og-preview.png" />
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="google-site-verification" content="TzNZIjYP45gXInPSyykjt9fY85Qgun7nS23oY4l9Sqg" />
-      </Head>
+      
 
       <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-red-600 via-emerald-900 to-black relative">
         <header className="absolute top-0 left-0 w-full flex items-center justify-between px-6 py-6 z-10">
