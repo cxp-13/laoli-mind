@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { Document } from '@/app/types';
 
+export const dynamic = 'force-dynamic';
+
 type Permission = {
   document_id: number;
   first_access: boolean;
