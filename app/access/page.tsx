@@ -6,14 +6,16 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Brain, ExternalLink, ArrowLeft, Sparkles, CheckCircle, Gift, SettingsIcon as Confetti, Star } from 'lucide-react';
+import { Brain, ExternalLink, ArrowLeft, Sparkles, CheckCircle, Gift, SettingsIcon as Confetti, Star, Clock, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 import { Document } from '../types';
-
+import { format } from 'date-fns';
 
 export interface AccessDocument extends Document {
   first_access: boolean;
+  deadline?: string | null;
 }
+
 export default function AccessPage() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
@@ -79,6 +81,34 @@ export default function AccessPage() {
     setFirstAccessDoc(null);
   };
 
+  // Helper function to format deadline display
+  const formatDeadline = (deadline: string | null | undefined) => {
+    if (!deadline) {
+      return { text: 'Permanent Access', icon: <Zap className="w-3 h-3" />, variant: 'default' as const };
+    }
+    
+    const deadlineDate = new Date(deadline);
+    const now = new Date();
+    const timeDiff = deadlineDate.getTime() - now.getTime();
+    const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    
+    if (daysLeft <= 0) {
+      return { text: 'Expired', icon: <Clock className="w-3 h-3" />, variant: 'destructive' as const };
+    } else if (daysLeft <= 7) {
+      return { 
+        text: `${daysLeft} day${daysLeft === 1 ? '' : 's'} left`, 
+        icon: <Clock className="w-3 h-3" />, 
+        variant: 'secondary' as const 
+      };
+    } else {
+      return { 
+        text: `Expires ${format(deadlineDate, 'MMM dd, yyyy')}`, 
+        icon: <Clock className="w-3 h-3" />, 
+        variant: 'outline' as const 
+      };
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-emerald-900 to-black">
@@ -139,42 +169,50 @@ export default function AccessPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {documents.map((doc, index) => (
-                  <motion.div
-                    key={doc.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.1 }}
-                  >
-                    <Card className="glass-effect border-emerald-700 hover:glow-green transition-all duration-300 h-full bg-black/70">
-                      <CardHeader>
-                        <div className="flex items-start justify-between">
+                {documents.map((doc, index) => {
+                  const deadlineInfo = formatDeadline(doc.deadline);
+                  return (
+                    <motion.div
+                      key={doc.id}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Card className="glass-effect border-emerald-700 hover:glow-green transition-all duration-300 h-full bg-black/70">
+                        <CardHeader>
                           <CardTitle className="text-lg line-clamp-2 text-emerald-300">
                             {doc.title}
                           </CardTitle>
-                          {!doc.first_access && (
-                            <Badge variant="secondary" className="ml-2">
-                              <CheckCircle className="w-3 h-3 mr-1" />
-                              Accessed
+                          <CardDescription className="line-clamp-3 text-white/80 mb-2">
+                            {doc.introduction}
+                          </CardDescription>
+                          <div className="flex flex-row gap-2 mt-2">
+                            {!doc.first_access && (
+                              <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs font-semibold flex items-center">
+                                <CheckCircle className="w-3 h-3 mr-1" />
+                                Accessed
+                              </Badge>
+                            )}
+                            <Badge variant={deadlineInfo.variant} className="rounded-full px-3 py-1 text-xs font-semibold flex items-center">
+                              {deadlineInfo.icon}
+                              {deadlineInfo.text}
                             </Badge>
-                          )}
-                        </div>
-                        <CardDescription className="line-clamp-3 text-white/80">
-                          {doc.introduction}
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent>
-                        <Button
-                          onClick={() => handleDocumentAccess(doc)}
-                          className="w-full bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold hover:from-emerald-400 hover:to-green-400 hover:text-white transition-transform"
-                        >
-                          <ExternalLink className="w-4 h-4 mr-2" />
-                          View Document
-                        </Button>
-                      </CardContent>
-                    </Card>
-                  </motion.div>
-                ))}
+                          </div>
+                        </CardHeader>
+                        <CardContent>
+                          <Button
+                            onClick={() => handleDocumentAccess(doc)}
+                            className="w-full bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold hover:from-emerald-400 hover:to-green-400 hover:text-white transition-transform"
+                            disabled={deadlineInfo.variant === 'destructive'}
+                          >
+                            <ExternalLink className="w-4 h-4 mr-2" />
+                            {deadlineInfo.variant === 'destructive' ? 'Expired' : 'View Document'}
+                          </Button>
+                        </CardContent>
+                      </Card>
+                    </motion.div>
+                  );
+                })}
               </div>
             </div>
           )}
@@ -198,7 +236,7 @@ export default function AccessPage() {
               onClick={(e) => e.stopPropagation()}
               className="max-w-md w-full"
             >
-              <Card className="glass-effect border-white/20 glow-red relative overflow-hidden">
+              <Card className="glass-effect border-emerald-700 bg-gradient-to-br from-black via-emerald-900 to-black relative overflow-hidden">
                 {/* Celebration Effects */}
                 <div className="absolute inset-0 pointer-events-none">
                   {[...Array(20)].map((_, i) => (
@@ -230,30 +268,29 @@ export default function AccessPage() {
                     initial={{ scale: 0 }}
                     animate={{ scale: 1 }}
                     transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                    className="w-16 h-16 rounded-full gradient-ai flex items-center justify-center mx-auto mb-4"
+                    className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-lime-400 flex items-center justify-center mx-auto mb-4"
                   >
                     <Gift className="w-8 h-8 text-white" />
                   </motion.div>
-                  <CardTitle className="text-2xl font-bold text-gradient mb-2">
-                    🎉 Congratulations! You've Got Access!
+                  <CardTitle className="text-2xl font-bold text-emerald-400 mb-2">
+                    🎉 Congratulations! You&apos;ve Got Access!
                   </CardTitle>
-                  <CardDescription className="text-base">
-                    Welcome to <strong>{firstAccessDoc.title}</strong>
+                  <CardDescription className="text-base text-white/90">
+                    Welcome to <strong className="text-emerald-300">{firstAccessDoc.title}</strong>
                   </CardDescription>
                 </CardHeader>
 
                 <CardContent className="text-center space-y-4 relative z-10">
-                  <p className="text-sm text-slate-600 leading-relaxed">
+                  <p className="text-sm text-emerald-200 leading-relaxed">
                     {firstAccessDoc.introduction}
                   </p>
-                  
                   <div className="flex flex-col space-y-3">
                     <Button
                       onClick={() => {
                         handleDocumentAccess(firstAccessDoc);
                         closeCelebration();
                       }}
-                      className="gradient-ai hover:scale-105 transition-transform glow-red"
+                      className="w-full bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all glow-green"
                     >
                       <Star className="w-4 h-4 mr-2" />
                       Access Document Now
@@ -261,7 +298,7 @@ export default function AccessPage() {
                     <Button
                       variant="outline"
                       onClick={closeCelebration}
-                      className="glass-effect"
+                      className="glass-effect border-emerald-700 text-emerald-300"
                     >
                       Access Later
                     </Button>

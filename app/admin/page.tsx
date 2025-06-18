@@ -36,6 +36,11 @@ export default function AdminPage() {
   const [permissions, setPermissions] = useState<Permission[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [formData, setFormData] = useState({
+    email: '',
+    document_id: '',
+    deadline: '',
+  });
 
   useEffect(() => {
     fetchData();
@@ -75,6 +80,14 @@ export default function AdminPage() {
     perm.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     perm.document_title.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const resetForm = () => {
+    setFormData({
+      email: '',
+      document_id: '',
+      deadline: '',
+    });
+  };
 
   if (isLoading) {
     return (

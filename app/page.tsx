@@ -32,6 +32,7 @@ export default function Home() {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
 
   useEffect(() => {
     fetchTestimonials();
@@ -107,6 +108,7 @@ export default function Home() {
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
+    setSelectedSuggestionIndex(-1);
 
     // 只在没有@或@后没有内容时显示建议
     const atIndex = value.indexOf('@');
@@ -118,6 +120,25 @@ export default function Home() {
       setShowSuggestions(true);
     } else {
       setShowSuggestions(false);
+    }
+  };
+
+  const handleEmailKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showSuggestions || suggestions.length === 0) return;
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedSuggestionIndex(idx => (idx + 1) % suggestions.length);
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedSuggestionIndex(idx => (idx - 1 + suggestions.length) % suggestions.length);
+    } else if (e.key === 'Enter') {
+      if (selectedSuggestionIndex >= 0 && selectedSuggestionIndex < suggestions.length) {
+        setEmail(suggestions[selectedSuggestionIndex]);
+        setShowSuggestions(false);
+        setSelectedSuggestionIndex(-1);
+        inputRef.current?.focus();
+        e.preventDefault();
+      }
     }
   };
 
@@ -163,6 +184,7 @@ export default function Home() {
                 type="email"
                 value={email}
                 onChange={handleEmailChange}
+                onKeyDown={handleEmailKeyDown}
                 onFocus={() => setIsInputFocused(true)}
                 onBlur={() => setTimeout(() => setIsInputFocused(false), 100)}
                 placeholder="Enter your email to get access"
@@ -189,10 +211,10 @@ export default function Home() {
                     aria-hidden="true"
                   />
                   <ul className="absolute left-0 right-0 top-full mt-2 bg-black/90 border border-emerald-700 rounded-xl shadow-lg z-20">
-                    {suggestions.map(s => (
+                    {suggestions.map((s, idx) => (
                       <li
                         key={s}
-                        className="px-5 py-2 text-white hover:bg-emerald-600 cursor-pointer transition"
+                        className={`px-5 py-2 text-white hover:bg-emerald-600 cursor-pointer transition ${selectedSuggestionIndex === idx ? 'bg-emerald-700' : ''}`}
                         onMouseDown={() => handleSuggestionClick(s)}
                       >
                         {s}

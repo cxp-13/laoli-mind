@@ -5,6 +5,7 @@ import { Document } from '@/app/types';
 type Permission = {
   document_id: number;
   first_access: boolean;
+  deadline: string | null;
 };
 
 export async function GET(request: NextRequest) {
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
     // 1. 查询 email_permissions
     const { data: permissions, error: permError } = await supabase
       .from('email_permissions')
-      .select('document_id, first_access')
+      .select('document_id, first_access, deadline')
       .eq('email', email);
 
     if (permError) {
@@ -33,17 +34,25 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // 2. 提取所有 document_id
-    const docIds = Array.from(new Set((permissions || []).map(p => p.document_id)));
+    // 2. 过滤掉已过期的权限
+    const now = new Date();
+    const validPermissions = (permissions || []).filter(p => {
+      // 如果 deadline 为 null，表示永久权限
+      if (p.deadline === null) return true;
+      // 否则检查是否过期
+      return new Date(p.deadline) > now;
+    });
 
-    // 3. 查询 documents 表
+    // 3. 提取所有有效的 document_id
+    const docIds = Array.from(new Set(validPermissions.map(p => p.document_id)));
+
+    // 4. 查询 documents 表
     let documentsMap: Record<number, Document> = {};
     if (docIds.length > 0) {
       const { data: documents, error: docError } = await supabase
         .from('documents')
-        .select('id, title, introduction, link, created_at, updated_at') // 👈加上这两个字段
+        .select('id, title, introduction, link, created_at, updated_at')
         .in('id', docIds);
-
 
       if (docError) {
         console.error('Error fetching documents:', docError);
@@ -59,19 +68,20 @@ export async function GET(request: NextRequest) {
       }, {} as Record<number, Document>);
     }
 
-    // 4. 合并权限和文档信息
-    const documentsWithAccess = (permissions || [])
+    // 5. 合并权限和文档信息
+    const documentsWithAccess = validPermissions
       .map(p => {
         const doc = documentsMap[p.document_id];
         if (!doc) return null;
         return {
           ...doc,
           first_access: p.first_access,
+          deadline: p.deadline,
         };
       })
       .filter(Boolean); // 去掉 null 的项
 
-    // 5. 返回 JSON
+    // 6. 返回 JSON
     return NextResponse.json({
       success: true,
       documents: documentsWithAccess,

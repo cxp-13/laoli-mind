@@ -46,6 +46,7 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
   const [formData, setFormData] = useState({
     email: '',
     document_id: '',
+    deadline: '',
   });
 
   const [selectDoc, setSelectDoc] = useState<Document>();
@@ -60,6 +61,7 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
     setFormData({
       email: '',
       document_id: '',
+      deadline: '',
     });
   };
 
@@ -191,6 +193,18 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                 </Select>
               </div>
 
+              <div className="space-y-2">
+                <Label htmlFor="deadline" className="text-emerald-300">Deadline (optional)</Label>
+                <Input
+                  id="deadline"
+                  type="datetime-local"
+                  value={formData.deadline}
+                  onChange={e => setFormData({ ...formData, deadline: e.target.value })}
+                  className="glass-effect border-emerald-700/30 text-emerald-300 placeholder:text-emerald-300/50"
+                />
+                <div className="text-xs text-emerald-300/60">Leave empty for permanent access</div>
+              </div>
+
               <div className="flex justify-end space-x-2 pt-4">
                 <Button
                   type="button"
@@ -229,7 +243,7 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
               </div>
               <h3 className="text-xl font-semibold text-emerald-300">No permissions</h3>
               <p className="text-emerald-300/70 max-w-md mx-auto">
-                No access permissions have been assigned yet. Click the "Assign Permission" button above to assign document access to users.
+                No access permissions have been assigned yet. Click the &quot;Assign Permission&quot; button above to assign document access to users.
               </p>
             </div>
           </CardContent>

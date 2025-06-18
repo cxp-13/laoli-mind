@@ -42,7 +42,9 @@ export async function GET() {
 
 export async function POST(request: NextRequest) {
   try {
-    const { email, document_id } = await request.json();
+    const body = await request.json();
+    console.log('Received body:', body);
+    const { email, document_id, deadline } = body;
 
     if (!email || !document_id) {
       return NextResponse.json(
@@ -66,13 +68,19 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const insertData: any = {
+      email,
+      document_id,
+      first_access: true,
+    };
+    if (deadline) {
+      insertData.deadline = deadline;
+    }
+    console.log('Insert data:', insertData);
+
     const { data: permission, error } = await supabase
       .from('email_permissions')
-      .insert({
-        email,
-        document_id,
-        first_access: true,
-      })
+      .insert(insertData)
       .select()
       .single();
 

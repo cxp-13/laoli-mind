@@ -5,6 +5,7 @@ export interface Document {
     link: string;
     created_at: string;
     updated_at: string;
+    deadline?: string | null;
 }
 
 
