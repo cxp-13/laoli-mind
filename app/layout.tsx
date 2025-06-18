@@ -14,8 +14,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'LaoliMind | AI & Web3 Transformation Resources',
-  description: 'LaoliMind offers Notion-based AI and Web3 transformation resources purchased on Rednote, available for free self-service access.',
+  title: 'LaoliMind',
+  description: 'Provide notice information collection service for Lantianlaoli',
   keywords: [
     'LaoliMind',
     'Notion',
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
     icon: '/favicon.png',
   },
   openGraph: {
-    title: 'LaoliMind | AI & Web3 Transformation Resources',
-    description: 'Curated by influencer Laoli on Rednote, access Notion AI & Web3 transformation packs instantly with email verification.',
+    title: 'LaoliMind',
+    description: 'Provide notice information collection service for Lantianlaoli',
     url: 'https://laolimind.vercel.app/',
     siteName: 'LaoliMind',
     images: [
@@ -39,7 +39,7 @@ export const metadata: Metadata = {
         url: 'https://laolimind.vercel.app/og-preview.png',
         width: 1200,
         height: 630,
-        alt: 'LaoliMind Transformation Resources',
+        alt: 'Provide notice information collection service for Lantianlaoli',
       },
     ],
     locale: 'en_US',
@@ -47,8 +47,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'LaoliMind | AI & Web3 Transformation Resources',
-    description: 'Curated by influencer Laoli on Rednote, access Notion AI & Web3 transformation packs instantly with email verification.',
+    title: 'LaoliMind',
+    description: 'Provide notice information collection service for Lantianlaoli',
     images: ['https://laolimind.vercel.app/og-preview.png'],
   },
   robots: {
