@@ -159,18 +159,33 @@ export default function Home() {
             <Brain className="w-8 h-8 text-emerald-400" />
             <span className="text-2xl font-bold text-emerald-400">LaoliMind</span>
           </div>
-          <Button
-            variant="outline"
-            className="rounded-full border-emerald-400 bg-black/60 text-emerald-300 hover:bg-emerald-900 active:scale-95 transition-all shadow"
-            onClick={() => setShowPwdModal(true)}
-          >
-            Admin Panel
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="outline"
+              className="rounded-full border-emerald-400 bg-black/60 text-emerald-300 hover:bg-emerald-900 active:scale-95 transition-all shadow"
+              onClick={() => setShowPwdModal(true)}
+            >
+              Admin Panel
+            </Button>
+          </div>
         </header>
         <div className="flex flex-col items-center justify-center flex-1 w-full h-full absolute top-0 left-0 right-0 bottom-0">
-          <h1 className="text-6xl md:text-8xl font-extrabold text-emerald-400 drop-shadow-lg tracking-tight font-manrope text-center">
-            LaoliMind
-          </h1>
+          <div className="relative flex flex-col items-center justify-center">
+            <h1 className="text-6xl md:text-8xl font-extrabold text-emerald-400 drop-shadow-lg tracking-tight font-manrope text-center">
+              LaoliMind
+            </h1>
+            {/* Built with Bolt.new badge 悬挂在标题右上角 */}
+            <a
+              href="https://bolt.new"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="absolute top-0 right-0 md:-right-24 -right-16 -mt-3 px-3 py-1.5 bg-black/60 border border-gray-600 rounded-full text-gray-300 text-sm hover:bg-gray-800 hover:border-gray-500 transition-all flex items-center gap-2 shadow-lg"
+              style={{ transform: 'translateY(-50%)' }}
+            >
+              <span>Built with</span>
+              <span className="font-semibold text-white">Bolt.new</span>
+            </a>
+          </div>
           <div className="mt-4 text-2xl md:text-3xl font-semibold text-white/80 font-inter text-center">
             Already bought on <span className="text-[#FE2349] font-bold">Rednote (小红书)</span>? Just enter your email to receive the <span className="text-black font-bold">Notion</span> pack.
           </div>
