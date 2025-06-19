@@ -1,11 +1,10 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Brain, Zap } from 'lucide-react';
+import { Brain, Zap, Star, Users, FileText, TrendingUp, ArrowRight, CheckCircle, Sparkles } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
-import Head from 'next/head';
-
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface Testimonial {
   id: string;
@@ -104,13 +103,11 @@ export default function Home() {
     }
   };
 
-  // 实时补全逻辑
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setEmail(value);
     setSelectedSuggestionIndex(-1);
 
-    // 只在没有@或@后没有内容时显示建议
     const atIndex = value.indexOf('@');
     if (atIndex === -1) {
       setSuggestions(EMAIL_SUFFIXES.map(suffix => value + suffix));
@@ -142,146 +139,364 @@ export default function Home() {
     }
   };
 
-  // 选择建议
   const handleSuggestionClick = (suggestion: string) => {
     setEmail(suggestion);
     setShowSuggestions(false);
     inputRef.current?.focus();
   };
 
-  return (
-    <>
-      
+  const maskEmail = (email: string) => {
+    const [username, domain] = email.split('@');
+    if (username.length <= 2) return email;
+    return `${username[0]}***${username[username.length - 1]}@${domain}`;
+  };
 
-      <div className="min-h-screen w-full flex flex-col items-center justify-center bg-gradient-to-br from-red-600 via-emerald-900 to-black relative">
-        <header className="absolute top-0 left-0 w-full flex items-center justify-between px-6 py-6 z-10">
-          <div className="flex items-center gap-2">
-            <Brain className="w-8 h-8 text-emerald-400" />
-            <span className="text-2xl font-bold text-emerald-400">LaoliMind</span>
+  const stats = [
+    { label: 'Active Users', value: new Set(testimonials.map(t => t.email)).size, icon: Users },
+    { label: 'Documents Accessed', value: testimonials.filter(t => !t.first_access).length, icon: FileText },
+    { label: 'Satisfaction Rate', value: '98%', icon: TrendingUp },
+  ];
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
+      {/* Background Effects */}
+      <div className="absolute inset-0">
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
+      </div>
+
+      {/* Header */}
+      <header className="relative z-10 px-6 py-6">
+        <nav className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-400 to-pink-400 rounded-xl flex items-center justify-center">
+              <Brain className="w-6 h-6 text-white" />
+            </div>
+            <span className="text-2xl font-bold text-white">LaoliMind</span>
           </div>
-          <div className="flex items-center gap-4">
-            <Button
-              variant="outline"
-              className="rounded-full border-emerald-400 bg-black/60 text-emerald-300 hover:bg-emerald-900 active:scale-95 transition-all shadow"
-              onClick={() => setShowPwdModal(true)}
-            >
-              Admin Panel
-            </Button>
-          </div>
-        </header>
-        <div className="flex flex-col items-center justify-center flex-1 w-full h-full absolute top-0 left-0 right-0 bottom-0">
-          <div className="relative flex flex-col items-center justify-center">
-            <h1 className="text-6xl md:text-8xl font-extrabold text-emerald-400 drop-shadow-lg tracking-tight font-manrope text-center">
-              LaoliMind
+          <Button
+            variant="outline"
+            className="border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
+            onClick={() => setShowPwdModal(true)}
+          >
+            Admin Panel
+          </Button>
+        </nav>
+      </header>
+
+      {/* Hero Section */}
+      <section className="relative z-10 px-6 py-20">
+        <div className="max-w-7xl mx-auto text-center">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            className="relative"
+          >
+            <h1 className="text-6xl md:text-8xl font-bold text-white mb-6 leading-tight">
+              Transform Your
+              <span className="block bg-gradient-to-r from-purple-400 via-pink-400 to-yellow-400 bg-clip-text text-transparent">
+                Web3 Journey
+              </span>
             </h1>
-            {/* Built with Bolt.new badge 悬挂在标题右上角 */}
-            <a
-              href="https://bolt.new"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="absolute top-0 right-0 md:-right-24 -right-16 -mt-3 px-3 py-1.5 bg-black/60 border border-gray-600 rounded-full text-gray-300 text-sm hover:bg-gray-800 hover:border-gray-500 transition-all flex items-center gap-2 shadow-lg"
-              style={{ transform: 'translateY(-50%)' }}
-            >
-              <span>Built with</span>
-              <span className="font-semibold text-white">Bolt.new</span>
-            </a>
-          </div>
-          <div className="mt-4 text-2xl md:text-3xl font-semibold text-white/80 font-inter text-center">
-            Already bought on <span className="text-[#FE2349] font-bold">Rednote (小红书)</span>? Just enter your email to receive the <span className="text-black font-bold">Notion</span> pack.
-          </div>
-          <div className="w-full max-w-4xl mx-auto mt-16 flex justify-center">
-            <form
-              className="flex items-center gap-2 bg-black/70 rounded-2xl p-4 shadow-lg border border-emerald-700 glass-effect relative"
-              onSubmit={handleEmailSubmit}
-            >
-              <input
-                ref={inputRef}
-                type="email"
-                value={email}
-                onChange={handleEmailChange}
-                onKeyDown={handleEmailKeyDown}
-                onFocus={() => setIsInputFocused(true)}
-                onBlur={() => setTimeout(() => setIsInputFocused(false), 100)}
-                placeholder="Enter your email to get access"
-                className="flex-1 px-5 py-3 rounded-full border-none bg-black/80 text-white text-lg font-inter focus:ring-2 focus:ring-emerald-400 transition-all placeholder:text-gray-400"
-                autoComplete="off"
-                required
-              />
-              <button
-                type="submit"
-                className="rounded-full px-8 py-3 bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold text-lg shadow-lg flex items-center gap-2  active:scale-95 transition-all relative overflow-hidden profit-btn"
+            
+            {/* Built with Bolt.new badge */}
+            <div className="absolute top-0 right-0 md:-right-32 -right-20">
+              <a
+                href="https://bolt.new"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-black/40 border border-white/20 rounded-full text-white/80 text-sm hover:bg-black/60 transition-all backdrop-blur-sm"
               >
-                <span className="relative flex items-center">
-                  <Zap className="w-5 h-5 profit-zap transition-transform duration-200" />
-                </span>
-                Unlock Access
-              </button>
-              {/* 补全建议下拉 */}
-              {isInputFocused && showSuggestions && suggestions.length > 0 && (
-                <>
-                  {/* 点击空白收起 */}
-                  <div
-                    className="fixed inset-0 z-10"
-                    onMouseDown={() => setShowSuggestions(false)}
-                    aria-hidden="true"
-                  />
-                  <ul className="absolute left-0 right-0 top-full mt-2 bg-black/90 border border-emerald-700 rounded-xl shadow-lg z-20">
-                    {suggestions.map((s, idx) => (
-                      <li
-                        key={s}
-                        className={`px-5 py-2 text-white hover:bg-emerald-600 cursor-pointer transition ${selectedSuggestionIndex === idx ? 'bg-emerald-700' : ''}`}
-                        onMouseDown={() => handleSuggestionClick(s)}
-                      >
-                        {s}
-                      </li>
-                    ))}
-                  </ul>
-                </>
-              )}
-            </form>
-          </div>
-        </div>
-        {showPwdModal && (
-          <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-            <div className="bg-gradient-to-br from-black via-emerald-900 to-black rounded-2xl p-8 shadow-2xl w-full max-w-sm">
-              <form onSubmit={handleAdminLogin} className="space-y-6">
-                <div>
-                  <label className="block mb-4 text-lg font-semibold text-emerald-400">Please enter the admin password</label>
+                <span>Built with</span>
+                <span className="font-semibold text-white">Bolt.new</span>
+              </a>
+            </div>
+          </motion.div>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-xl md:text-2xl text-white/80 mb-4 max-w-4xl mx-auto leading-relaxed"
+          >
+            Already bought on <span className="text-[#FE2349] font-semibold">Rednote (小红书)</span>? 
+            Enter your email to unlock exclusive <span className="text-white font-semibold">Notion</span> resources.
+          </motion.p>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="mt-12"
+          >
+            <form onSubmit={handleEmailSubmit} className="max-w-2xl mx-auto">
+              <div className="relative">
+                <div className="flex items-center bg-white/10 backdrop-blur-md rounded-2xl p-2 border border-white/20">
                   <input
-                    type="password"
-                    value={adminPwd}
-                    onChange={e => setAdminPwd(e.target.value)}
-                    autoFocus
+                    ref={inputRef}
+                    type="email"
+                    value={email}
+                    onChange={handleEmailChange}
+                    onKeyDown={handleEmailKeyDown}
+                    onFocus={() => setIsInputFocused(true)}
+                    onBlur={() => setTimeout(() => setIsInputFocused(false), 100)}
+                    placeholder="Enter your email to unlock access"
+                    className="flex-1 px-6 py-4 bg-transparent text-white text-lg placeholder:text-white/60 focus:outline-none"
+                    autoComplete="off"
                     required
-                    className="w-full px-5 py-3 rounded-xl bg-black/80 text-white text-lg border-2 border-transparent focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400 outline-none transition-all"
                   />
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold px-8 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg"
+                  >
+                    {isLoading ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Checking...</span>
+                      </div>
+                    ) : (
+                      <>
+                        <Zap className="w-5 h-5 mr-2" />
+                        Unlock Access
+                      </>
+                    )}
+                  </Button>
                 </div>
-                <div className="flex justify-end space-x-3">
-                  <button
+
+                {/* Email Suggestions */}
+                {isInputFocused && showSuggestions && suggestions.length > 0 && (
+                  <>
+                    <div
+                      className="fixed inset-0 z-10"
+                      onMouseDown={() => setShowSuggestions(false)}
+                      aria-hidden="true"
+                    />
+                    <ul className="absolute left-0 right-0 top-full mt-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl shadow-xl z-20 max-h-48 overflow-y-auto">
+                      {suggestions.map((s, idx) => (
+                        <li
+                          key={s}
+                          className={`px-6 py-3 text-white hover:bg-white/20 cursor-pointer transition-colors ${
+                            selectedSuggestionIndex === idx ? 'bg-white/20' : ''
+                          }`}
+                          onMouseDown={() => handleSuggestionClick(s)}
+                        >
+                          {s}
+                        </li>
+                      ))}
+                    </ul>
+                  </>
+                )}
+              </div>
+            </form>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="relative z-10 px-6 py-16">
+        <div className="max-w-7xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {stats.map((stat, index) => (
+              <div
+                key={stat.label}
+                className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 text-center hover:bg-white/20 transition-all duration-300"
+              >
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <stat.icon className="w-8 h-8 text-white" />
+                </div>
+                <div className="text-3xl font-bold text-white mb-2">{stat.value}</div>
+                <div className="text-white/80">{stat.label}</div>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      {testimonials.length > 0 && (
+        <section className="relative z-10 px-6 py-20">
+          <div className="max-w-7xl mx-auto">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="text-center mb-16"
+            >
+              <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+                Trusted by <span className="text-purple-400">Innovators</span>
+              </h2>
+              <p className="text-xl text-white/80 max-w-2xl mx-auto">
+                Join thousands of Web3 enthusiasts who have already unlocked their potential
+              </p>
+            </motion.div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              <AnimatePresence>
+                {testimonials.slice(0, 6).map((testimonial, index) => (
+                  <motion.div
+                    key={testimonial.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/20 transition-all duration-300 group"
+                  >
+                    <div className="flex items-center space-x-3 mb-4">
+                      <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-pink-400 rounded-full flex items-center justify-center">
+                        <span className="text-white font-semibold text-lg">
+                          {testimonial.email[0].toUpperCase()}
+                        </span>
+                      </div>
+                      <div className="flex-1">
+                        <div className="text-white font-semibold">
+                          {maskEmail(testimonial.email)}
+                        </div>
+                        <div className="flex items-center space-x-1">
+                          {[...Array(5)].map((_, i) => (
+                            <Star key={i} className="w-4 h-4 text-yellow-400 fill-current" />
+                          ))}
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-1">
+                        {testimonial.first_access ? (
+                          <div className="w-2 h-2 bg-yellow-400 rounded-full"></div>
+                        ) : (
+                          <CheckCircle className="w-5 h-5 text-green-400" />
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="text-white/90 mb-4 line-clamp-3">
+                      Accessed: <span className="font-semibold text-purple-300">{testimonial.document_title}</span>
+                    </div>
+                    
+                    <div className="text-white/60 text-sm">
+                      {new Date(testimonial.created_at).toLocaleDateString('en-US', {
+                        month: 'short',
+                        day: 'numeric',
+                        year: 'numeric'
+                      })}
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            </div>
+
+            {testimonials.length > 6 && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 1.2 }}
+                className="text-center mt-12"
+              >
+                <Button
+                  variant="outline"
+                  className="border-white/20 bg-white/10 text-white hover:bg-white/20 backdrop-blur-sm"
+                >
+                  View More Success Stories
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </motion.div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* Admin Password Modal */}
+      <AnimatePresence>
+        {showPwdModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
+            onClick={() => setShowPwdModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20 w-full max-w-md"
+            >
+              <form onSubmit={handleAdminLogin} className="space-y-6">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <Sparkles className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-2">Admin Access</h3>
+                  <p className="text-white/80">Enter your admin password to continue</p>
+                </div>
+                
+                <input
+                  type="password"
+                  value={adminPwd}
+                  onChange={e => setAdminPwd(e.target.value)}
+                  placeholder="Enter admin password"
+                  autoFocus
+                  required
+                  className="w-full px-6 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                />
+                
+                <div className="flex space-x-3">
+                  <Button
                     type="button"
-                    className="px-6 py-2 rounded-full bg-black text-white border border-emerald-500 hover:bg-emerald-900 transition"
+                    variant="outline"
+                    className="flex-1 border-white/20 bg-white/10 text-white hover:bg-white/20"
                     onClick={() => {
                       setShowPwdModal(false);
                       setAdminPwd('');
                     }}
                   >
                     Cancel
-                  </button>
-                  <button
+                  </Button>
+                  <Button
                     type="submit"
-                    className="px-6 py-2 rounded-full bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold shadow-lg hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all"
                     disabled={pwdLoading}
+                    className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
                   >
-                    {pwdLoading ? 'Verifying...' : 'Enter Admin Panel'}
-                  </button>
+                    {pwdLoading ? (
+                      <div className="flex items-center space-x-2">
+                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <span>Verifying...</span>
+                      </div>
+                    ) : (
+                      'Access Admin Panel'
+                    )}
+                  </Button>
                 </div>
               </form>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         )}
-      </div>
-    </>
+      </AnimatePresence>
 
-
+      {/* Floating Feedback Button */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, delay: 1.5 }}
+        className="fixed bottom-8 right-8 z-50"
+      >
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfSgjX5KtEH8aJmOIE2aEbIA0KkvbGaIVdOMrMnUQ5AUUcyBA/viewform"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v12a2 2 0 01-2 2z" />
+          </svg>
+          Feedback
+        </a>
+      </motion.div>
+    </div>
   );
 }
