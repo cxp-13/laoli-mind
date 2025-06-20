@@ -120,7 +120,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col relative">
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center relative font-sans">
       {/* Admin Button - Fixed Position */}
       <div className="absolute top-6 right-6 z-50">
         <Button
@@ -132,42 +132,46 @@ export default function Home() {
         </Button>
       </div>
 
-      {/* Giant Graffiti Title - Takes up most of top space */}
-      <div className="flex-1 flex items-center justify-center px-4 pt-8 pb-4">
-        <h1 className="text-[8rem] sm:text-[12rem] md:text-[16rem] lg:text-[20rem] xl:text-[24rem] font-bold text-white leading-none select-none"
-            style={{ 
-              fontFamily: "'Brush Script MT', 'Marker Felt', 'Comic Sans MS', cursive",
-              fontWeight: '900',
-              letterSpacing: '-0.05em',
-              textShadow: `
-                3px 3px 0px #333,
-                6px 6px 0px #666,
-                9px 9px 0px #999,
-                12px 12px 20px rgba(0,0,0,0.8)
-              `,
-              transform: 'rotate(-2deg)',
-              WebkitTextStroke: '2px #fff',
-              filter: 'drop-shadow(0 0 30px rgba(255,255,255,0.3))'
-            }}>
+      {/* Main Content Container */}
+      <div className="flex flex-col items-center justify-center text-center px-4 w-full max-w-4xl space-y-12">
+        {/* Graffiti Title - Reasonable size */}
+        <motion.h1 
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white leading-none select-none"
+          style={{ 
+            fontFamily: "'Brush Script MT', 'Marker Felt', 'Comic Sans MS', cursive",
+            fontWeight: '900',
+            letterSpacing: '-0.02em',
+            textShadow: `
+              2px 2px 0px #333,
+              4px 4px 0px #666,
+              6px 6px 0px #999,
+              8px 8px 15px rgba(0,0,0,0.6)
+            `,
+            transform: 'rotate(-1deg)',
+            WebkitTextStroke: '1px #fff',
+            filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.2))'
+          }}
+        >
           laoliMind
-        </h1>
-      </div>
+        </motion.h1>
 
-      {/* Content Section - Smaller bottom area */}
-      <div className="flex-shrink-0 flex flex-col items-center justify-center text-center px-4 pb-8 space-y-8">
-        <div className="w-full max-w-2xl relative">
+        {/* Content Section */}
+        <div className="w-full max-w-2xl relative space-y-8">
           {/* Subtitle */}
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            className="text-xl sm:text-2xl mb-8 text-gray-300 font-light"
+            transition={{ delay: 0.3 }}
+            className="text-xl sm:text-2xl text-gray-300 font-light"
           >
             Enter your email, access the notion documents
           </motion.p>
           
           {/* Built in Bolt.new Badge */}
-          <div className="absolute top-[-4rem] right-0 transform rotate-12 hidden lg:block">
+          <div className="absolute top-[-6rem] right-0 transform rotate-12 hidden lg:block">
             <div className="w-40 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
               <a
                 href="https://bolt.new"
@@ -184,7 +188,7 @@ export default function Home() {
           <motion.form 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4 }}
+            transition={{ delay: 0.5 }}
             onSubmit={handleEmailSubmit} 
             className="relative w-full max-w-md mx-auto"
           >
@@ -239,10 +243,15 @@ export default function Home() {
         </div>
 
         {/* Footer */}
-        <footer className="text-center text-gray-500 text-sm space-y-1">
+        <motion.footer 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+          className="text-center text-gray-500 text-sm space-y-1 pt-8"
+        >
           <p className="font-light">Made by lantianlaoli</p>
           <p className="font-light">&copy;2025 lantianlaoli@gmail.com</p>
-        </footer>
+        </motion.footer>
       </div>
 
       {/* Admin Password Modal */}
