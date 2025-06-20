@@ -160,28 +160,45 @@ export default function Home() {
 
         {/* Content Section */}
         <div className="w-full max-w-2xl relative space-y-8">
-          {/* Subtitle */}
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="text-xl sm:text-2xl text-gray-300 font-light"
-          >
-            Enter your email, access the notion documents
-          </motion.p>
-          
-          {/* Built in Bolt.new Badge */}
-          <div className="absolute top-[-6rem] right-0 transform rotate-12 hidden lg:block">
-            <div className="w-40 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
-              <a
-                href="https://bolt.new"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white text-base font-medium text-center leading-tight"
-              >
-                built in<br/>Bolt.new
-              </a>
-            </div>
+          {/* Subtitle with Badge */}
+          <div className="relative">
+            <motion.p 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+              className="text-xl sm:text-2xl text-gray-300 font-light"
+            >
+              Enter your email, access the notion documents
+            </motion.p>
+            
+            {/* Built in Bolt.new Badge - Smaller and positioned relative to subtitle */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8, rotate: 0 }}
+              animate={{ opacity: 1, scale: 1, rotate: 15 }}
+              transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+              className="absolute -top-3 -right-8 sm:-right-12 hidden sm:block"
+            >
+              <div className="relative">
+                {/* Badge Shape */}
+                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 via-purple-600 to-pink-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20 relative overflow-hidden">
+                  {/* Badge Shine Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent rounded-full"></div>
+                  
+                  {/* Badge Content */}
+                  <a
+                    href="https://bolt.new"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-white text-xs font-bold text-center leading-tight z-10 relative hover:scale-105 transition-transform"
+                  >
+                    built in<br/>Bolt.new
+                  </a>
+                </div>
+                
+                {/* Badge Ribbon/String Effect */}
+                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0.5 h-4 bg-gradient-to-b from-gray-400 to-gray-600 rounded-full shadow-sm"></div>
+              </div>
+            </motion.div>
           </div>
 
           {/* Email Input Form */}
