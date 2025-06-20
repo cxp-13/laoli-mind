@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Brain, ExternalLink, ArrowLeft, Sparkles, CheckCircle, Gift, SettingsIcon as Confetti, Star, Clock, Zap } from 'lucide-react';
+import { Brain, ExternalLink, ArrowLeft, Sparkles, CheckCircle, Gift, Clock, Zap } from 'lucide-react';
 import { toast } from 'sonner';
 import { Document } from '../types';
 import { format } from 'date-fns';
@@ -84,7 +84,7 @@ export default function AccessPage() {
   // Helper function to format deadline display
   const formatDeadline = (deadline: string | null | undefined) => {
     if (!deadline) {
-      return { text: 'Permanent Access', icon: <Zap className="w-3 h-3" />, variant: 'default' as const };
+      return { text: 'Permanent Access', icon: <Zap className="w-3 h-3" />, variant: 'secondary' as const };
     }
     
     const deadlineDate = new Date(deadline);
@@ -111,49 +111,47 @@ export default function AccessPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-emerald-900 to-black">
+      <div className="min-h-screen flex items-center justify-center bg-black">
         <div className="text-center space-y-4">
-          <div className="w-12 h-12 border-4 border-emerald-400/30 border-t-emerald-400 rounded-full animate-spin mx-auto" />
-          <p className="text-emerald-200">Loading your exclusive content...</p>
+          <div className="w-12 h-12 border-4 border-gray-700 border-t-white rounded-full animate-spin mx-auto" />
+          <p className="text-gray-400">Loading your exclusive content...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col bg-gradient-to-br from-black via-emerald-900 to-black">
+    <div className="min-h-screen w-full flex flex-col bg-black text-white">
       {/* Header */}
-      <header className="px-4 lg:px-6 h-16 flex items-center justify-between border-b border-white/10 glass-effect">
+      <header className="px-4 lg:px-6 h-16 flex items-center justify-between border-b border-gray-800 sticky top-0 bg-black/80 backdrop-blur-sm z-10">
         <div className="flex items-center space-x-4">
           <Button
             variant="outline"
             size="lg"
             onClick={() => window.history.back()}
-            className="rounded-full px-6 py-2 bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold text-lg shadow-lg border-none hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all flex items-center gap-2"
-            style={{ minWidth: 120 }}
+            className="rounded-full px-6 py-2 bg-gray-800 text-white border-gray-700 hover:bg-gray-700 active:scale-95 transition-all flex items-center gap-2"
           >
-            <ArrowLeft className="w-6 h-6" />
+            <ArrowLeft className="w-5 h-5" />
             Back
           </Button>
-        
         </div>
-        <Badge variant="outline" className="glass-effect">
+        <Badge variant="outline" className="border-gray-700 bg-gray-900 text-gray-300">
           {email}
         </Badge>
       </header>
 
       {/* Main Content */}
-      <main className="px-4 py-8">
+      <main className="px-4 py-8 flex-1">
         <div className="max-w-4xl mx-auto">
           {documents.length === 0 ? (
-            <Card className="glass-effect border-emerald-700 text-center py-12 bg-black/70">
+            <Card className="border-gray-800 text-center py-12 bg-gray-900/50">
               <CardContent>
                 <div className="space-y-4">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto bg-gradient-to-br from-emerald-400 to-lime-400">
-                    <Brain className="w-8 h-8 text-black" />
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto bg-gray-800">
+                    <Brain className="w-8 h-8 text-gray-400" />
                   </div>
-                  <h3 className="text-xl font-semibold text-emerald-300">No accessible content</h3>
-                  <p className="text-white/80">
+                  <h3 className="text-xl font-semibold text-white">No accessible content</h3>
+                  <p className="text-gray-400">
                     You currently have no accessible documents. Please contact the administrator.
                   </p>
                 </div>
@@ -162,9 +160,9 @@ export default function AccessPage() {
           ) : (
             <div className="space-y-6">
               <div className="text-center space-y-2">
-                <h1 className="text-3xl md:text-5xl font-extrabold text-emerald-400 drop-shadow-lg">Your Exclusive Content</h1>
-                <p className="text-lg text-white/80">
-                  You have <span className="font-bold text-emerald-300">{documents.length}</span> accessible documents
+                <h1 className="text-3xl md:text-5xl font-extrabold text-white">Your Exclusive Content</h1>
+                <p className="text-lg text-gray-400">
+                  You have <span className="font-bold text-white">{documents.length}</span> accessible documents
                 </p>
               </div>
 
@@ -178,22 +176,28 @@ export default function AccessPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                      <Card className="glass-effect border-emerald-700 hover:glow-green transition-all duration-300 h-full bg-black/70">
-                        <CardHeader>
-                          <CardTitle className="text-lg line-clamp-2 text-emerald-300">
+                      <Card className="border-gray-800 hover:border-gray-700 transition-all duration-300 h-full bg-gray-900/50 flex flex-col">
+                        <CardHeader className="flex-1">
+                          <CardTitle className="text-lg line-clamp-2 text-white">
                             {doc.title}
                           </CardTitle>
-                          <CardDescription className="line-clamp-3 text-white/80 mb-2">
+                          <CardDescription className="line-clamp-3 text-gray-400 mb-2">
                             {doc.introduction}
                           </CardDescription>
                           <div className="flex flex-row gap-2 mt-2">
                             {!doc.first_access && (
-                              <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs font-semibold flex items-center">
+                              <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs font-semibold flex items-center bg-gray-700 text-gray-300">
                                 <CheckCircle className="w-3 h-3 mr-1" />
                                 Accessed
                               </Badge>
                             )}
-                            <Badge variant={deadlineInfo.variant} className="rounded-full px-3 py-1 text-xs font-semibold flex items-center">
+                            <Badge 
+                              variant={deadlineInfo.variant} 
+                              className={`rounded-full px-3 py-1 text-xs font-semibold flex items-center ${
+                                deadlineInfo.variant === 'destructive' ? 'bg-red-900/50 text-red-300 border border-red-500/30' : 
+                                deadlineInfo.variant === 'secondary' ? 'bg-gray-700 text-gray-300' : 'border-gray-600'
+                              }`}
+                            >
                               {deadlineInfo.icon}
                               {deadlineInfo.text}
                             </Badge>
@@ -202,7 +206,7 @@ export default function AccessPage() {
                         <CardContent>
                           <Button
                             onClick={() => handleDocumentAccess(doc)}
-                            className="w-full bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold hover:from-emerald-400 hover:to-green-400 hover:text-white transition-transform"
+                            className="w-full bg-gray-200 text-black font-bold hover:bg-gray-300 disabled:bg-gray-800 disabled:text-gray-500 transition-all"
                             disabled={deadlineInfo.variant === 'destructive'}
                           >
                             <ExternalLink className="w-4 h-4 mr-2" />
@@ -226,7 +230,7 @@ export default function AccessPage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
             onClick={closeCelebration}
           >
             <motion.div
@@ -236,13 +240,13 @@ export default function AccessPage() {
               onClick={(e) => e.stopPropagation()}
               className="max-w-md w-full"
             >
-              <Card className="glass-effect border-emerald-700 bg-gradient-to-br from-black via-emerald-900 to-black relative overflow-hidden">
+              <Card className="border-gray-700 bg-gray-900 relative overflow-hidden">
                 {/* Celebration Effects */}
                 <div className="absolute inset-0 pointer-events-none">
                   {[...Array(20)].map((_, i) => (
                     <motion.div
                       key={i}
-                      className="absolute w-2 h-2 rounded-full bg-gradient-to-r from-yellow-400 to-pink-500"
+                      className="absolute w-2 h-2 rounded-full bg-white"
                       initial={{
                         x: '50%',
                         y: '50%',
@@ -252,79 +256,63 @@ export default function AccessPage() {
                         x: `${Math.random() * 100}%`,
                         y: `${Math.random() * 100}%`,
                         scale: [0, 1, 0],
+                        opacity: [0, 1, 0],
                       }}
                       transition={{
-                        duration: 2,
-                        delay: i * 0.1,
+                        duration: Math.random() * 1.5 + 0.5,
                         repeat: Infinity,
-                        repeatDelay: 3,
+                        delay: i * 0.1,
                       }}
                     />
                   ))}
                 </div>
-
+                
                 <CardHeader className="text-center relative z-10">
-                  <motion.div
-                    initial={{ scale: 0 }}
-                    animate={{ scale: 1 }}
-                    transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
-                    className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-400 to-lime-400 flex items-center justify-center mx-auto mb-4"
-                  >
+                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto bg-gray-800 mb-4 border border-gray-700">
                     <Gift className="w-8 h-8 text-white" />
-                  </motion.div>
-                  <CardTitle className="text-2xl font-bold text-emerald-400 mb-2">
-                    🎉 Congratulations! You&apos;ve Got Access!
+                  </div>
+                  <CardTitle className="text-2xl font-bold text-white">
+                    First Access Unlocked!
                   </CardTitle>
-                  <CardDescription className="text-base text-white/90">
-                    Welcome to <strong className="text-emerald-300">{firstAccessDoc.title}</strong>
+                  <CardDescription className="text-gray-400 mt-2">
+                    You've gained access to: <br />
+                    <strong className="text-white">{firstAccessDoc.title}</strong>
                   </CardDescription>
                 </CardHeader>
-
-                <CardContent className="text-center space-y-4 relative z-10">
-                  <p className="text-sm text-emerald-200 leading-relaxed">
-                    {firstAccessDoc.introduction}
+                <CardContent className="text-center relative z-10">
+                  <p className="text-gray-400 mb-6">
+                    A confirmation email with the document link has been sent to you.
                   </p>
-                  <div className="flex flex-col space-y-3">
-                    <Button
-                      onClick={() => {
-                        handleDocumentAccess(firstAccessDoc);
-                        closeCelebration();
-                      }}
-                      className="w-full bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all glow-green"
-                    >
-                      <Star className="w-4 h-4 mr-2" />
-                      Access Document Now
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={closeCelebration}
-                      className="glass-effect border-emerald-700 text-emerald-300"
-                    >
-                      Access Later
-                    </Button>
-                  </div>
+                  <Button
+                    onClick={closeCelebration}
+                    className="w-full bg-gray-200 text-black font-bold hover:bg-gray-300"
+                  >
+                    Got it!
+                  </Button>
                 </CardContent>
               </Card>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Floating Feedback Button */}
-      <a
-        href="https://docs.google.com/forms/d/e/1FAIpQLSfSgjX5KtEH8aJmOIE2aEbIA0KkvbGaIVdOMrMnUQ5AUUcyBA/viewform"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 z-50"
-        aria-label="Project Feedback Survey"
+      
+      {/* Feedback Button */}
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, delay: 0.5 }}
+        className="fixed bottom-8 right-8 z-20"
       >
-        <button
-          className="flex items-center gap-2 px-5 py-3 rounded-full bg-gradient-to-r from-emerald-500 to-lime-400 text-black font-bold shadow-lg hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all focus:outline-none"
+        <a
+          href="https://docs.google.com/forms/d/e/1FAIpQLSfSgjX5KtEH8aJmOIE2aEbIA0KkvbGaIVdOMrMnUQ5AUUcyBA/viewform"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-3 px-4 py-3 bg-gray-900/80 backdrop-blur-sm text-white font-semibold rounded-full shadow-lg border border-gray-700 hover:bg-gray-800 transition-all"
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16h6m2 4H7a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v12a2 2 0 01-2 2z" /></svg>
+          <Sparkles className="w-5 h-5" />
           Feedback
-        </button>
-      </a>
+        </a>
+      </motion.div>
     </div>
   );
 }

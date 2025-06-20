@@ -143,24 +143,24 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-emerald-400">Permission Management</h2>
-          <p className="text-emerald-300/70">Manage user document access permissions</p>
+          <h2 className="text-2xl font-bold text-white">Permission Management</h2>
+          <p className="text-gray-400">Manage user document access permissions</p>
         </div>
 
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-gradient-to-r from-emerald-500 to-lime-400 text-black hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all">
+            <Button className="bg-gray-200 text-black hover:bg-gray-300">
               <Plus className="w-4 h-4 mr-2" />
               Assign Permission
             </Button>
           </DialogTrigger>
-          <DialogContent className="glass-effect border-emerald-700/30">
+          <DialogContent className="bg-gray-900 border-gray-800 text-white">
             <DialogHeader>
-              <DialogTitle className="text-emerald-400">Assign Access Permission</DialogTitle>
+              <DialogTitle>Assign Access Permission</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleCreate} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-emerald-300">User Email *</Label>
+                <Label htmlFor="email" className="text-gray-300">User Email *</Label>
                 <Input
                   id="email"
                   type="email"
@@ -168,24 +168,24 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="user@example.com"
                   required
-                  className="glass-effect border-emerald-700/30 text-emerald-300 placeholder:text-emerald-300/50"
+                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:ring-gray-600"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="document" className="text-emerald-300">Select Document *</Label>
+                <Label htmlFor="document" className="text-gray-300">Select Document *</Label>
                 <Select
                   value={formData.document_id}
                   onValueChange={(value) =>
                     setFormData({ ...formData, document_id: value })
                   }
                 >
-                  <SelectTrigger id="document" className="glass-effect border-emerald-700/30 text-emerald-300">
-                    <SelectValue placeholder="Select a document to assign" >{selectDoc?.title}</SelectValue>
+                  <SelectTrigger id="document" className="bg-gray-800 border-gray-700 text-white focus:ring-gray-600">
+                    <SelectValue placeholder="Select a document to assign" />
                   </SelectTrigger>
-                  <SelectContent className="glass-effect border-emerald-700/30">
+                  <SelectContent className="bg-gray-900 border-gray-800 text-white">
                     {documents.map((doc) => (
-                      <SelectItem key={doc.id} value={doc.id} className="text-emerald-300 hover:bg-emerald-900">
+                      <SelectItem key={doc.id} value={doc.id} className="text-gray-300 hover:bg-gray-800 focus:bg-gray-700">
                         {doc.title}
                       </SelectItem>
                     ))}
@@ -194,15 +194,15 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="deadline" className="text-emerald-300">Deadline (optional)</Label>
+                <Label htmlFor="deadline" className="text-gray-300">Deadline (optional)</Label>
                 <Input
                   id="deadline"
                   type="datetime-local"
                   value={formData.deadline}
                   onChange={e => setFormData({ ...formData, deadline: e.target.value })}
-                  className="glass-effect border-emerald-700/30 text-emerald-300 placeholder:text-emerald-300/50"
+                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:ring-gray-600"
                 />
-                <div className="text-xs text-emerald-300/60">Leave empty for permanent access</div>
+                <div className="text-xs text-gray-500">Leave empty for permanent access</div>
               </div>
 
               <div className="flex justify-end space-x-2 pt-4">
@@ -213,14 +213,14 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                     setIsCreateDialogOpen(false);
                     resetForm();
                   }}
-                  className="border-emerald-700 text-emerald-300 hover:bg-emerald-900"
+                  className="border-gray-700 text-gray-300 hover:bg-gray-800"
                 >
                   Cancel
                 </Button>
-                <Button type="submit" disabled={isLoading} className="bg-gradient-to-r from-emerald-500 to-lime-400 text-black hover:from-emerald-400 hover:to-green-400 hover:text-white active:scale-95 transition-all">
+                <Button type="submit" disabled={isLoading} className="bg-gray-200 text-black hover:bg-gray-300">
                   {isLoading ? (
                     <div className="flex items-center space-x-2">
-                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                       <span>Assigning...</span>
                     </div>
                   ) : (
@@ -235,93 +235,86 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
 
       {/* Permissions Display */}
       {Object.keys(groupedPermissions).length === 0 ? (
-        <Card className="glass-effect border-emerald-700/30 text-center py-12">
+        <Card className="bg-gray-900/50 border-gray-800 text-center py-12">
           <CardContent>
             <div className="space-y-4">
-              <div className="w-16 h-16 rounded-full bg-emerald-900/50 flex items-center justify-center mx-auto">
-                <AlertCircle className="w-8 h-8 text-emerald-400" />
+              <div className="w-16 h-16 rounded-full bg-gray-900 flex items-center justify-center mx-auto">
+                <AlertCircle className="w-8 h-8 text-gray-600" />
               </div>
-              <h3 className="text-xl font-semibold text-emerald-300">No permissions</h3>
-              <p className="text-emerald-300/70 max-w-md mx-auto">
-                No access permissions have been assigned yet. Click the &quot;Assign Permission&quot; button above to assign document access to users.
+              <h3 className="text-xl font-semibold text-gray-300">No permissions</h3>
+              <p className="text-gray-500 max-w-md mx-auto">
+                No access permissions have been assigned yet. Click the "Assign Permission" button above to assign document access to users.
               </p>
             </div>
           </CardContent>
         </Card>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <AnimatePresence>
-            {Object.entries(groupedPermissions).map(([email, userPermissions], index) => (
-              <motion.div
-                key={email}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ delay: index * 0.05 }}
-              >
-                <Card className="glass-effect border-emerald-700/30 hover:shadow-lg hover:shadow-emerald-500/20 transition-all duration-300">
-                  <CardHeader>
-                    <div className="flex items-center justify-between">
+            {Object.entries(groupedPermissions).map(([email, perms], index) => {
+              const notAccessedCount = perms.filter(p => p.first_access).length;
+              return (
+                <motion.div
+                  key={email}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card className="bg-gray-900/50 border-gray-800">
+                    <CardHeader className="flex flex-row items-center justify-between">
                       <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-full bg-emerald-900/50 flex items-center justify-center">
-                          <Mail className="w-5 h-5 text-emerald-400" />
-                        </div>
+                        <Mail className="w-5 h-5 text-gray-500" />
                         <div>
-                          <CardTitle className="text-lg text-emerald-300">{email}</CardTitle>
-                          <p className="text-sm text-emerald-300/70">
-                            {userPermissions.length} document permissions
-                          </p>
+                          <CardTitle className="text-base font-semibold text-white">{email}</CardTitle>
+                          <p className="text-sm text-gray-500">{perms.length} document permission(s)</p>
                         </div>
                       </div>
-                      <Badge variant="secondary" className="bg-emerald-900/50 text-emerald-300">
-                        {userPermissions.filter(p => p.first_access).length} Not Accessed
+                      <Badge
+                        variant={notAccessedCount > 0 ? 'destructive' : 'secondary'}
+                        className={notAccessedCount > 0 ? 'bg-red-900/50 text-red-300 border border-red-500/30' : 'bg-gray-800 text-gray-400'}
+                      >
+                        {notAccessedCount} Not Accessed
                       </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="space-y-3">
-                      {userPermissions.map((perm) => (
-                        <div
-                          key={perm.id}
-                          className="flex items-center justify-between p-3 rounded-lg glass-effect border border-emerald-700/30"
-                        >
-                          <div className="flex-1">
-                            <div className="flex items-center space-x-2">
-                              <h4 className="font-medium text-emerald-300">{perm.document_title}</h4>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      {perms.map((perm) => (
+                        <div key={perm.id} className="flex items-center justify-between p-2 rounded-md hover:bg-gray-800/50">
+                          <div>
+                            <p className="font-medium text-sm text-gray-300">{perm.document_title}</p>
+                            <div className="flex items-center space-x-4 text-xs text-gray-500 mt-1">
+                              <span className="flex items-center space-x-1">
+                                <Calendar className="w-3 h-3" />
+                                <span>{format(new Date(perm.created_at), 'yyyy年M月d日', { locale: zhCN })}</span>
+                              </span>
                               {perm.first_access ? (
-                                <Badge variant="outline" className="text-yellow-600 border-yellow-300">
+                                <Badge variant="outline" className="border-yellow-500/30 text-yellow-300 bg-yellow-900/30 text-xs">
                                   <Clock className="w-3 h-3 mr-1" />
                                   Not Accessed
                                 </Badge>
                               ) : (
-                                <Badge variant="outline" className="text-green-600 border-green-300">
+                                <Badge variant="secondary" className="bg-gray-700 text-gray-300 text-xs">
                                   <CheckCircle className="w-3 h-3 mr-1" />
                                   Accessed
                                 </Badge>
                               )}
                             </div>
-                            <div className="flex items-center space-x-1 text-xs text-emerald-300/70 mt-1">
-                              <Calendar className="w-3 h-3" />
-                              <span>
-                                {format(new Date(perm.created_at), 'PPP', { locale: zhCN })}
-                              </span>
-                            </div>
                           </div>
                           <Button
-                            size="sm"
                             variant="ghost"
+                            size="icon"
                             onClick={() => handleDelete(perm.id)}
-                            className="hover:bg-red-500/20 text-red-500 ml-2"
+                            className="text-red-500/80 hover:text-red-500 hover:bg-red-900/20"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </div>
                       ))}
-                    </div>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         </div>
       )}

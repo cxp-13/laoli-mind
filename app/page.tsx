@@ -290,8 +290,8 @@ export default function Home() {
             >
               <form onSubmit={handleAdminLogin} className="space-y-6">
                 <div className="text-center">
-                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                    <Sparkles className="w-8 h-8 text-white" />
+                  <div className="w-16 h-16 bg-gray-800 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-gray-700">
+                    <Sparkles className="w-8 h-8 text-gray-400" />
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-2">Admin Access</h3>
                   <p className="text-gray-300 font-light">Enter your admin password to continue</p>
@@ -304,7 +304,7 @@ export default function Home() {
                   placeholder="Enter admin password"
                   autoFocus
                   required
-                  className="w-full px-6 py-4 bg-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-xl text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  className="w-full px-6 py-4 bg-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-xl text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 />
                 
                 <div className="flex space-x-3">
@@ -322,11 +322,11 @@ export default function Home() {
                   <Button
                     type="submit"
                     disabled={pwdLoading}
-                    className="flex-1 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white"
+                    className="flex-1 bg-gray-200 text-black hover:bg-gray-300 disabled:bg-gray-500"
                   >
                     {pwdLoading ? (
                       <div className="flex items-center justify-center space-x-2">
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        <div className="w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin" />
                         <span>Verifying...</span>
                       </div>
                     ) : (
