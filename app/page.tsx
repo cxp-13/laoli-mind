@@ -120,45 +120,61 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center relative font-sans">
-      <header className="absolute top-0 left-0 right-0 p-4 sm:p-8 flex justify-between items-center">
-        <h1 className="text-6xl font-normal" style={{ fontFamily: "'Brush Script MT', cursive" }}>
+    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center relative">
+      {/* Header */}
+      <header className="absolute top-0 left-0 right-0 p-6 sm:p-8 flex justify-between items-center">
+        <h1 className="text-5xl sm:text-6xl lg:text-7xl font-normal text-white" 
+            style={{ 
+              fontFamily: "'Brush Script MT', 'Lucida Handwriting', cursive",
+              fontWeight: 'normal',
+              letterSpacing: '-0.02em'
+            }}>
           laoliMind
         </h1>
         <Button
           variant="outline"
-          className="bg-gray-200 text-black px-4 py-1 rounded-lg text-sm hover:bg-gray-300"
+          className="bg-gray-200 text-black px-4 py-2 rounded-lg text-sm hover:bg-gray-300 border-none font-medium"
           onClick={() => setShowPwdModal(true)}
         >
           admin
         </Button>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 w-full">
-        <div className="w-full max-w-lg relative">
-          <p className="text-xl sm:text-2xl mb-8 text-gray-300">
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 w-full max-w-2xl">
+        <div className="w-full relative">
+          {/* Subtitle */}
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="text-xl sm:text-2xl mb-12 text-gray-300 font-light"
+          >
             Enter your email, access the notion documents
-          </p>
+          </motion.p>
           
-          <div className="absolute top-[-4rem] right-0 transform-gpu rotate-12 hidden lg:block">
-            <div
-              className="w-40 h-24 bg-purple-600 rounded-full"
-              style={{
-                transform: 'rotate(-20deg)',
-              }}
-            >
+          {/* Built in Bolt.new Badge */}
+          <div className="absolute top-[-5rem] right-0 transform rotate-12 hidden lg:block">
+            <div className="w-40 h-24 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-lg">
               <a
                 href="https://bolt.new"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full h-full flex items-center justify-center text-white text-lg font-bold"
+                className="text-white text-base font-medium text-center leading-tight"
               >
-                <span className="text-center leading-tight">built in<br/>Bolt.new</span>
+                built in<br/>Bolt.new
               </a>
             </div>
           </div>
 
-          <form onSubmit={handleEmailSubmit} className="relative w-full max-w-sm mx-auto">
+          {/* Email Input Form */}
+          <motion.form 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4 }}
+            onSubmit={handleEmailSubmit} 
+            className="relative w-full max-w-md mx-auto"
+          >
             <div className="flex items-center">
               <input
                 ref={inputRef}
@@ -168,45 +184,52 @@ export default function Home() {
                 onKeyDown={handleEmailKeyDown}
                 onFocus={() => setIsInputFocused(true)}
                 onBlur={() => setTimeout(() => setIsInputFocused(false), 150)}
-                className="w-full pl-6 pr-16 py-4 bg-gray-800 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 border border-gray-700"
+                className="w-full pl-6 pr-16 py-4 bg-gray-800/80 backdrop-blur-sm rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 border border-gray-700/50 text-lg"
+                placeholder="your@email.com"
                 autoComplete="off"
                 required
               />
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-transparent hover:bg-gray-700 text-white disabled:text-gray-500"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-transparent hover:bg-gray-700/50 text-white disabled:text-gray-500 transition-all"
               >
                 {isLoading ? (
                   <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                 ) : (
-                  <Check className="w-7 h-7" />
+                  <Check className="w-6 h-6" />
                 )}
               </Button>
             </div>
 
+            {/* Email Suggestions */}
             {isInputFocused && showSuggestions && suggestions.length > 0 && (
-              <ul className="absolute left-0 right-0 top-full mt-2 bg-gray-900 border border-gray-700 rounded-lg shadow-xl z-20 max-h-48 overflow-y-auto text-left">
+              <motion.ul 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute left-0 right-0 top-full mt-2 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-xl shadow-xl z-20 max-h-48 overflow-y-auto text-left"
+              >
                 {suggestions.map((s, idx) => (
                   <li
                     key={s}
-                    className={`px-6 py-3 text-white hover:bg-gray-800 cursor-pointer transition-colors ${
-                      selectedSuggestionIndex === idx ? 'bg-gray-700' : ''
+                    className={`px-6 py-3 text-white hover:bg-gray-800/50 cursor-pointer transition-colors text-lg ${
+                      selectedSuggestionIndex === idx ? 'bg-gray-700/50' : ''
                     }`}
                     onMouseDown={() => handleSuggestionClick(s)}
                   >
                     {s}
                   </li>
                 ))}
-              </ul>
+              </motion.ul>
             )}
-          </form>
+          </motion.form>
         </div>
       </main>
 
-      <footer className="w-full text-center p-4 text-gray-500 text-sm">
-        <p>Made by lantianlaoli</p>
-        <p>&copy;2025 lantianlaoli@gmail.com</p>
+      {/* Footer */}
+      <footer className="w-full text-center p-6 text-gray-500 text-sm">
+        <p className="font-light">Made by lantianlaoli</p>
+        <p className="font-light">&copy;2025 lantianlaoli@gmail.com</p>
       </footer>
 
       {/* Admin Password Modal */}
@@ -224,7 +247,7 @@ export default function Home() {
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
               onClick={(e) => e.stopPropagation()}
-              className="bg-gray-900 border border-gray-700 rounded-2xl p-8 w-full max-w-md"
+              className="bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 w-full max-w-md"
             >
               <form onSubmit={handleAdminLogin} className="space-y-6">
                 <div className="text-center">
@@ -232,7 +255,7 @@ export default function Home() {
                     <Sparkles className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-2xl font-bold text-white mb-2">Admin Access</h3>
-                  <p className="text-gray-300">Enter your admin password to continue</p>
+                  <p className="text-gray-300 font-light">Enter your admin password to continue</p>
                 </div>
                 
                 <input
@@ -242,14 +265,14 @@ export default function Home() {
                   placeholder="Enter admin password"
                   autoFocus
                   required
-                  className="w-full px-6 py-4 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                  className="w-full px-6 py-4 bg-gray-800/80 backdrop-blur-sm border border-gray-700/50 rounded-xl text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
                 />
                 
                 <div className="flex space-x-3">
                   <Button
                     type="button"
                     variant="outline"
-                    className="flex-1 border-gray-600 bg-gray-800 text-white hover:bg-gray-700"
+                    className="flex-1 border-gray-600 bg-gray-800/50 text-white hover:bg-gray-700/50 backdrop-blur-sm"
                     onClick={() => {
                       setShowPwdModal(false);
                       setAdminPwd('');
