@@ -160,43 +160,53 @@ export default function Home() {
 
         {/* Content Section */}
         <div className="w-full max-w-2xl relative space-y-8">
-          {/* Subtitle with Badge */}
-          <div className="relative">
+          {/* Subtitle with Badge - Closer positioning */}
+          <div className="relative inline-block">
             <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.3 }}
-              className="text-xl sm:text-2xl text-gray-300 font-light"
+              className="text-xl sm:text-2xl text-gray-300 font-light inline-flex items-center gap-2 flex-wrap justify-center"
             >
-              Enter your email, access the notion documents
+              Enter your email, access the{' '}
+              <span className="inline-flex items-center gap-1">
+                {/* Notion Logo */}
+                <img 
+                  src="/upscalemedia-transformed.png" 
+                  alt="Notion" 
+                  className="w-6 h-6 sm:w-7 sm:h-7 inline-block"
+                />
+                <span>documents</span>
+              </span>
             </motion.p>
             
-            {/* Built in Bolt.new Badge - Smaller and positioned relative to subtitle */}
+            {/* Built in Bolt.new Badge - Much closer to text */}
             <motion.div 
               initial={{ opacity: 0, scale: 0.8, rotate: 0 }}
-              animate={{ opacity: 1, scale: 1, rotate: 15 }}
+              animate={{ opacity: 1, scale: 1, rotate: 12 }}
               transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-              className="absolute -top-3 -right-8 sm:-right-12 hidden sm:block"
+              className="absolute -top-2 -right-4 sm:-right-6 hidden sm:block"
+              style={{ transform: 'translate(10px, -10px) rotate(12deg)' }}
             >
               <div className="relative">
-                {/* Badge Shape */}
-                <div className="w-20 h-20 bg-gradient-to-br from-purple-500 via-purple-600 to-pink-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white/20 relative overflow-hidden">
+                {/* Hanging String */}
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-0.5 h-6 bg-gradient-to-b from-gray-300 to-gray-500 rounded-full shadow-sm"></div>
+                
+                {/* Badge Shape - Smaller */}
+                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-purple-600 to-pink-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white/30 relative overflow-hidden hover:scale-105 transition-transform cursor-pointer">
                   {/* Badge Shine Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/20 to-transparent rounded-full"></div>
+                  <div className="absolute inset-0 bg-gradient-to-tr from-white/30 to-transparent rounded-full"></div>
                   
                   {/* Badge Content */}
                   <a
                     href="https://bolt.new"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-white text-xs font-bold text-center leading-tight z-10 relative hover:scale-105 transition-transform"
+                    className="text-white text-xs font-bold text-center leading-tight z-10 relative"
                   >
                     built in<br/>Bolt.new
                   </a>
                 </div>
-                
-                {/* Badge Ribbon/String Effect */}
-                <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-0.5 h-4 bg-gradient-to-b from-gray-400 to-gray-600 rounded-full shadow-sm"></div>
               </div>
             </motion.div>
           </div>
