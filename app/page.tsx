@@ -120,7 +120,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col items-center justify-center relative font-sans">
+    <div className="min-h-screen bg-black text-white flex flex-col relative font-sans">
       {/* Admin Button - Fixed Position */}
       <div className="absolute top-6 right-6 z-50">
         <Button
@@ -133,153 +133,143 @@ export default function Home() {
       </div>
 
       {/* Main Content Container */}
-      <div className="flex flex-col items-center justify-center text-center px-4 w-full max-w-4xl space-y-12">
-        {/* Graffiti Title - Reasonable size */}
-        <motion.h1 
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut" }}
-          className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white leading-none select-none"
-          style={{ 
-            fontFamily: "'Brush Script MT', 'Marker Felt', 'Comic Sans MS', cursive",
-            fontWeight: '900',
-            letterSpacing: '-0.02em',
-            textShadow: `
-              2px 2px 0px #333,
-              4px 4px 0px #666,
-              6px 6px 0px #999,
-              8px 8px 15px rgba(0,0,0,0.6)
-            `,
-            transform: 'rotate(-1deg)',
-            WebkitTextStroke: '1px #fff',
-            filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.2))'
-          }}
-        >
-          laoliMind
-        </motion.h1>
-
-        {/* Content Section */}
-        <div className="w-full max-w-2xl relative space-y-8">
-          {/* Subtitle with Badge - Closer positioning */}
-          <div className="relative inline-block">
-            <motion.p 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-xl sm:text-2xl text-gray-300 font-light inline-flex items-center gap-2 flex-wrap justify-center"
-            >
-              Enter your email, access the{' '}
-              <span className="inline-flex items-center gap-1">
-                {/* Notion Logo */}
-                <img 
-                  src="/upscalemedia-transformed.png" 
-                  alt="Notion" 
-                  className="w-6 h-6 sm:w-7 sm:h-7 inline-block"
-                />
-                <span>documents</span>
-              </span>
-            </motion.p>
-            
-            {/* Built in Bolt.new Badge - Much closer to text */}
-            <motion.div 
-              initial={{ opacity: 0, scale: 0.8, rotate: 0 }}
-              animate={{ opacity: 1, scale: 1, rotate: 12 }}
-              transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-              className="absolute -top-2 -right-4 sm:-right-6 hidden sm:block"
-              style={{ transform: 'translate(10px, -10px) rotate(12deg)' }}
-            >
-              <div className="relative">
-                {/* Hanging String */}
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 w-0.5 h-6 bg-gradient-to-b from-gray-300 to-gray-500 rounded-full shadow-sm"></div>
-                
-                {/* Badge Shape - Smaller */}
-                <div className="w-16 h-16 bg-gradient-to-br from-purple-500 via-purple-600 to-pink-500 rounded-full flex items-center justify-center shadow-lg border-2 border-white/30 relative overflow-hidden hover:scale-105 transition-transform cursor-pointer">
-                  {/* Badge Shine Effect */}
-                  <div className="absolute inset-0 bg-gradient-to-tr from-white/30 to-transparent rounded-full"></div>
-                  
-                  {/* Badge Content */}
-                  <a
-                    href="https://bolt.new"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-white text-xs font-bold text-center leading-tight z-10 relative"
-                  >
-                    built in<br/>Bolt.new
-                  </a>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Email Input Form */}
-          <motion.form 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            onSubmit={handleEmailSubmit} 
-            className="relative w-full max-w-md mx-auto"
+      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 w-full">
+        <div className="flex flex-col items-center justify-center w-full max-w-4xl space-y-12">
+          {/* Graffiti Title - Reasonable size */}
+          <motion.h1 
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white leading-none select-none"
+            style={{ 
+              fontFamily: "'Brush Script MT', 'Marker Felt', 'Comic Sans MS', cursive",
+              fontWeight: '900',
+              letterSpacing: '-0.02em',
+              textShadow: `
+                2px 2px 0px #333,
+                4px 4px 0px #666,
+                6px 6px 0px #999,
+                8px 8px 15px rgba(0,0,0,0.6)
+              `,
+              transform: 'rotate(-1deg)',
+              WebkitTextStroke: '1px #fff',
+              filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.2))'
+            }}
           >
-            <div className="flex items-center">
-              <input
-                ref={inputRef}
-                type="email"
-                value={email}
-                onChange={handleEmailChange}
-                onKeyDown={handleEmailKeyDown}
-                onFocus={() => setIsInputFocused(true)}
-                onBlur={() => setTimeout(() => setIsInputFocused(false), 150)}
-                className="w-full pl-6 pr-16 py-4 bg-gray-800/80 backdrop-blur-sm rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 border border-gray-700/50 text-lg"
-                placeholder="your@email.com"
-                autoComplete="off"
-                required
-              />
-              <Button
-                type="submit"
-                disabled={isLoading}
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-transparent hover:bg-gray-700/50 text-white disabled:text-gray-500 transition-all"
+            laoliMind
+          </motion.h1>
+
+          {/* Content Section */}
+          <div className="w-full max-w-2xl relative space-y-8">
+            {/* Subtitle with Badge - Closer positioning */}
+            <div className="relative inline-block">
+              <motion.p 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+                className="text-xl sm:text-2xl text-gray-300 font-light inline-flex items-center gap-2 flex-wrap justify-center"
               >
-                {isLoading ? (
-                  <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                ) : (
-                  <Check className="w-6 h-6" />
-                )}
-              </Button>
+                Enter your email, access the{' '}
+                <span className="inline-flex items-center gap-1">
+                  {/* Notion Logo */}
+                  <img 
+                    src="/upscalemedia-transformed.png" 
+                    alt="Notion" 
+                    className="w-6 h-6 sm:w-7 sm:h-7 inline-block"
+                  />
+                  <span>documents</span>
+                </span>
+              </motion.p>
+              
+              {/* Built in Bolt.new Badge */}
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8, rotate: 0 }}
+                animate={{ opacity: 1, scale: 1, rotate: 12 }}
+                transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
+                className="absolute -top-2 -right-4 sm:-right-8 hidden sm:block"
+                style={{ transform: 'rotate(12deg)' }}
+              >
+                <a
+                  href="https://bolt.new"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-black border border-gray-700/80 text-gray-300 px-2 py-0.5 text-[10px] font-semibold rounded-md shadow-lg hover:bg-gray-900 transition-all transform hover:scale-105"
+                >
+                  built in Bolt.new
+                </a>
+              </motion.div>
             </div>
 
-            {/* Email Suggestions */}
-            {isInputFocused && showSuggestions && suggestions.length > 0 && (
-              <motion.ul 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="absolute left-0 right-0 top-full mt-2 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-xl shadow-xl z-20 max-h-48 overflow-y-auto text-left"
-              >
-                {suggestions.map((s, idx) => (
-                  <li
-                    key={s}
-                    className={`px-6 py-3 text-white hover:bg-gray-800/50 cursor-pointer transition-colors text-lg ${
-                      selectedSuggestionIndex === idx ? 'bg-gray-700/50' : ''
-                    }`}
-                    onMouseDown={() => handleSuggestionClick(s)}
-                  >
-                    {s}
-                  </li>
-                ))}
-              </motion.ul>
-            )}
-          </motion.form>
-        </div>
+            {/* Email Input Form */}
+            <motion.form 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
+              onSubmit={handleEmailSubmit} 
+              className="relative w-full max-w-md mx-auto"
+            >
+              <div className="flex items-center">
+                <input
+                  ref={inputRef}
+                  type="email"
+                  value={email}
+                  onChange={handleEmailChange}
+                  onKeyDown={handleEmailKeyDown}
+                  onFocus={() => setIsInputFocused(true)}
+                  onBlur={() => setTimeout(() => setIsInputFocused(false), 150)}
+                  className="w-full pl-6 pr-16 py-4 bg-gray-800/80 backdrop-blur-sm rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 border border-gray-700/50 text-lg"
+                  placeholder="your@email.com"
+                  autoComplete="off"
+                  required
+                />
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-transparent hover:bg-gray-700/50 text-white disabled:text-gray-500 transition-all"
+                >
+                  {isLoading ? (
+                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                  ) : (
+                    <Check className="w-6 h-6" />
+                  )}
+                </Button>
+              </div>
 
-        {/* Footer */}
-        <motion.footer 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.7 }}
-          className="text-center text-gray-500 text-sm space-y-1 pt-8"
-        >
-          <p className="font-light">Made by lantianlaoli</p>
-          <p className="font-light">&copy;2025 lantianlaoli@gmail.com</p>
-        </motion.footer>
-      </div>
+              {/* Email Suggestions */}
+              {isInputFocused && showSuggestions && suggestions.length > 0 && (
+                <motion.ul 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute left-0 right-0 top-full mt-2 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-xl shadow-xl z-20 max-h-48 overflow-y-auto text-left"
+                >
+                  {suggestions.map((s, idx) => (
+                    <li
+                      key={s}
+                      className={`px-6 py-3 text-white hover:bg-gray-800/50 cursor-pointer transition-colors text-lg ${
+                        selectedSuggestionIndex === idx ? 'bg-gray-700/50' : ''
+                      }`}
+                      onMouseDown={() => handleSuggestionClick(s)}
+                    >
+                      {s}
+                    </li>
+                  ))}
+                </motion.ul>
+              )}
+            </motion.form>
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <motion.footer 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.7 }}
+        className="w-full text-center p-4 text-gray-500 text-sm"
+      >
+        <p className="font-light">Made by lantianlaoli</p>
+        <p className="font-light">&copy;2025 lantianlaoli@gmail.com</p>
+      </motion.footer>
 
       {/* Admin Password Modal */}
       <AnimatePresence>
