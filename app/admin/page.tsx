@@ -6,7 +6,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsContent, TabsTrigger } from '@/components/ui/tabs';
 import { motion } from 'framer-motion';
 import {
   ArrowLeft,
@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from 'react';
 import { toast } from 'sonner';
 import { Document } from '../types';
+import React from 'react';
 
 export interface Permission {
   id: string;
@@ -190,20 +191,21 @@ export default function AdminPage() {
           </div>
 
           {/* Search Bar */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 }}
-            className="relative max-w-md"
-          >
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
-            <Input
-              placeholder="Search documents or permissions..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 bg-gray-900/50 border-gray-800 text-white placeholder:text-gray-500 focus:ring-gray-600"
-            />
-          </motion.div>
+          <div className="relative max-w-md">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
+              <Input
+                placeholder="Search documents or permissions..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-10 bg-gray-900/50 border-gray-800 text-white placeholder:text-gray-500 focus:ring-gray-600"
+              />
+            </motion.div>
+          </div>
 
           {/* Tabs */}
           <motion.div
@@ -222,21 +224,21 @@ export default function AdminPage() {
                   <span>Permission Management</span>
                 </TabsTrigger>
               </TabsList>
-
-              <TabsContent value="documents" className="space-y-6">
-                <DocumentManager
-                  documents={filteredDocuments}
-                  onRefresh={fetchData}
-                />
-              </TabsContent>
-
-              <TabsContent value="permissions" className="space-y-6">
-                <PermissionManager
-                  permissions={filteredPermissions}
-                  documents={documents}
-                  onRefresh={fetchData}
-                />
-              </TabsContent>
+              <React.Fragment>
+                <TabsContent value="documents" className="space-y-6">
+                  <DocumentManager
+                    documents={filteredDocuments}
+                    onRefresh={fetchData}
+                  />
+                </TabsContent>
+                <TabsContent value="permissions" className="space-y-6">
+                  <PermissionManager
+                    permissions={filteredPermissions}
+                    documents={documents}
+                    onRefresh={fetchData}
+                  />
+                </TabsContent>
+              </React.Fragment>
             </Tabs>
           </motion.div>
         </div>

@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
-export async function PUT(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function PUT(request: NextRequest) {
   try {
     const { title, introduction, link } = await request.json();
-    const { id } = params;
+    const id = request.nextUrl.pathname.split('/')[4]; // 获取 id 参数
 
     if (!title || !introduction || !link) {
       return NextResponse.json(
@@ -49,12 +46,9 @@ export async function PUT(
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+export async function DELETE(request: NextRequest) {
   try {
-    const { id } = params;
+    const id = request.nextUrl.pathname.split('/')[4]; // 获取 id 参数
 
     // First delete related permissions
     await supabase

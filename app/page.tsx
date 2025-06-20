@@ -254,58 +254,59 @@ export default function Home() {
         <section className="min-h-screen flex flex-col items-center justify-center text-center px-4 w-full">
           <div className="flex flex-col items-center w-full max-w-4xl space-y-12">
             {/* Graffiti Title */}
-            <motion.h1
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
-              className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white leading-none select-none relative"
-              style={{
-                fontFamily: "'Brush Script MT', 'Marker Felt', 'Comic Sans MS', cursive",
-                fontWeight: '900',
-                letterSpacing: '-0.02em',
-                textShadow: `
-                  0 0 10px rgba(255, 255, 255, 0.2),
-                  0 0 20px rgba(255, 255, 255, 0.2),
-                  0 0 40px rgba(110, 231, 183, 0.5),
-                  0 0 80px rgba(59, 130, 246, 0.5)
-                `,
-                transform: 'rotate(-1deg)',
-              }}
-            >
-              laoli
-              <span style={{ position: 'relative', display: 'inline-block' }}>
-                Mind
-                {/* Badge precisely at top-right of 'Mind' */}
-                <span
-                  style={{
-                    position: 'absolute',
-                    top: '-1.6em',
-                    right: '-1.2em',
-                    display: 'inline-block',
-                    padding: '0.13em 0.7em',
-                    borderRadius: '0.9em',
-                    fontFamily: "'Brush Script MT', 'Marker Felt', 'Comic Sans MS', cursive",
-                    fontWeight: 700,
-                    fontSize: '0.85rem',
-                    letterSpacing: '0.01em',
-                    background: 'linear-gradient(90deg, #8B5CF6 30%, #06B6D4 100%)',
-                    color: '#fff',
-                    opacity: 0.82,
-                    boxShadow: '0 1.5px 8px #8B5CF6, 0 0 12px #06B6D4, 0 1px 4px #000',
-                    textShadow: '0 0 4px #8B5CF6, 0 0 8px #06B6D4',
-                    border: '1px solid #8B5CF6',
-                    filter: 'drop-shadow(0 1.5px 4px #06B6D4)',
-                    userSelect: 'none',
-                    transform: 'rotate(2deg)',
-                    backgroundClip: 'padding-box',
-                    zIndex: 10,
-                    pointerEvents: 'none',
-                  }}
-                >
-                  Built with Bolt.new
+            <div className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white leading-none select-none relative">
+              <motion.h1
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
+                style={{
+                  fontFamily: "'Brush Script MT', 'Marker Felt', 'Comic Sans MS', cursive",
+                  fontWeight: '900',
+                  letterSpacing: '-0.02em',
+                  textShadow: `
+                    0 0 10px rgba(255, 255, 255, 0.2),
+                    0 0 20px rgba(255, 255, 255, 0.2),
+                    0 0 40px rgba(110, 231, 183, 0.5),
+                    0 0 80px rgba(59, 130, 246, 0.5)
+                  `,
+                  transform: 'rotate(-1deg)',
+                }}
+              >
+                laoli
+                <span style={{ position: 'relative', display: 'inline-block' }}>
+                  Mind
+                  {/* Badge precisely at top-right of 'Mind' */}
+                  <span
+                    style={{
+                      position: 'absolute',
+                      top: '-1.6em',
+                      right: '-1.2em',
+                      display: 'inline-block',
+                      padding: '0.13em 0.7em',
+                      borderRadius: '0.9em',
+                      fontFamily: "'Brush Script MT', 'Marker Felt', 'Comic Sans MS', cursive",
+                      fontWeight: 700,
+                      fontSize: '0.85rem',
+                      letterSpacing: '0.01em',
+                      background: 'linear-gradient(90deg, #8B5CF6 30%, #06B6D4 100%)',
+                      color: '#fff',
+                      opacity: 0.82,
+                      boxShadow: '0 1.5px 8px #8B5CF6, 0 0 12px #06B6D4, 0 1px 4px #000',
+                      textShadow: '0 0 4px #8B5CF6, 0 0 8px #06B6D4',
+                      border: '1px solid #8B5CF6',
+                      filter: 'drop-shadow(0 1.5px 4px #06B6D4)',
+                      userSelect: 'none',
+                      transform: 'rotate(2deg)',
+                      backgroundClip: 'padding-box',
+                      zIndex: 10,
+                      pointerEvents: 'none',
+                    }}
+                  >
+                    Built with Bolt.new
+                  </span>
                 </span>
-              </span>
-            </motion.h1>
+              </motion.h1>
+            </div>
 
             {/* Subtitle */}
             <div
@@ -341,60 +342,74 @@ export default function Home() {
             {/* Content Section */}
             <div className="w-full max-w-md relative space-y-4">
               {/* Email Input Form */}
-              <motion.form
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                onSubmit={handleEmailSubmit}
-                className="relative w-full mx-auto"
-              >
-                <div className="flex items-center">
-                  <input
-                    ref={inputRef}
-                    type="email"
-                    value={email}
-                    onChange={handleEmailChange}
-                    onKeyDown={handleEmailKeyDown}
-                    onFocus={() => setIsInputFocused(true)}
-                    onBlur={() => setTimeout(() => setIsInputFocused(false), 150)}
-                    className="w-full pl-6 pr-16 py-4 bg-gray-900/50 backdrop-blur-sm rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-700/50 text-lg"
-                    placeholder="your@email.com"
-                    autoComplete="off"
-                    required
-                  />
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-lg bg-gradient-to-r from-teal-400 to-blue-500 text-white disabled:opacity-50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/50 active:scale-95"
-                  >
-                    {isLoading ? (
-                      <div className="w-6 h-6 border-2 border-white/50 border-t-white rounded-full animate-spin" />
-                    ) : (
-                      <Send className="w-6 h-6" />
-                    )}
-                  </Button>
-                </div>
+              <form onSubmit={handleEmailSubmit} className="relative w-full mx-auto">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                >
+                  <div className="flex items-center">
+                    <input
+                      ref={inputRef}
+                      type="email"
+                      value={email}
+                      onChange={handleEmailChange}
+                      onKeyDown={handleEmailKeyDown}
+                      onFocus={() => setIsInputFocused(true)}
+                      onBlur={() => setTimeout(() => setIsInputFocused(false), 150)}
+                      className="w-full pl-6 pr-16 py-4 bg-gray-900/50 backdrop-blur-sm rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-700/50 text-lg"
+                      placeholder="your@email.com"
+                      autoComplete="off"
+                      required
+                    />
+                    <Button
+                      type="submit"
+                      disabled={isLoading}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-lg bg-gradient-to-r from-teal-400 to-blue-500 text-white disabled:opacity-50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/50 active:scale-95"
+                    >
+                      {isLoading ? (
+                        <div className="w-6 h-6 border-2 border-white/50 border-t-white rounded-full animate-spin" />
+                      ) : (
+                        <Send className="w-6 h-6" />
+                      )}
+                    </Button>
+                  </div>
 
-                {/* Email Suggestions */}
-                {isInputFocused && showSuggestions && suggestions.length > 0 && (
-                  <motion.ul
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="absolute left-0 right-0 top-full mt-2 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-xl shadow-xl z-20 max-h-48 overflow-y-auto text-left"
-                  >
-                    {suggestions.map((s, idx) => (
-                      <li
-                        key={s}
-                        className={`px-6 py-3 text-white hover:bg-gray-800/50 cursor-pointer transition-colors text-lg ${selectedSuggestionIndex === idx ? 'bg-gray-700/50' : ''
-                          }`}
-                        onMouseDown={() => handleSuggestionClick(s)}
-                      >
-                        {s}
-                      </li>
-                    ))}
-                  </motion.ul>
-                )}
-              </motion.form>
+                  {/* Email Suggestions */}
+                  {isInputFocused && showSuggestions && suggestions.length > 0 && (
+                    <motion.ul
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      style={{
+                        position: 'absolute',
+                        left: 0,
+                        right: 0,
+                        top: '100%',
+                        marginTop: '0.5rem',
+                        background: 'rgba(24,24,27,0.95)',
+                        backdropFilter: 'blur(8px)',
+                        border: '1px solid #374151',
+                        borderRadius: '0.75rem',
+                        boxShadow: '0 8px 32px rgba(0,0,0,0.45)',
+                        zIndex: 20,
+                        maxHeight: '12rem',
+                        overflowY: 'auto',
+                        textAlign: 'left',
+                      }}
+                    >
+                      {suggestions.map((s, idx) => (
+                        <li
+                          key={s}
+                          className={`px-6 py-3 text-white hover:bg-gray-800/50 cursor-pointer transition-colors text-lg ${selectedSuggestionIndex === idx ? 'bg-gray-700/50' : ''}`}
+                          onMouseDown={() => handleSuggestionClick(s)}
+                        >
+                          {s}
+                        </li>
+                      ))}
+                    </motion.ul>
+                  )}
+                </motion.div>
+              </form>
 
 
             </div>
@@ -404,96 +419,90 @@ export default function Home() {
         {/* Testimonial Section */}
         {testimonials.length > 0 && (
           <section className="w-full pb-24">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.8 }}
-              className="w-full text-center"
-            >
-              {/* Animated Reader Count - New Design */}
-              <div className="mb-8 flex justify-center">
-                <span
-                  className="text-4xl md:text-5xl font-extrabold tracking-tight"
-                  style={{
-                    fontFamily: 'Montserrat, Inter, "Orbitron", Arial, sans-serif',
-                    letterSpacing: '0.01em',
-                    color: '#eaf6ff',
-                    textShadow: '0 0 16px #fff, 0 0 32px #06B6D4, 0 0 48px #8B5CF6',
-                    filter: 'drop-shadow(0 0 16px #8B5CF6) drop-shadow(0 0 32px #06B6D4)',
-                  }}
-                >
-                  {/* Animated count up for 20 */}
-                  <AnimatedCount to={20} duration={2200} />
-                  <span style={{ marginLeft: '2px' }}>+</span>
-                  <span className="ml-2 font-bold">
-                    people have read the document.
-                  </span>
-                </span>
-              </div>
-              {/* End Animated Reader Count */}
-              <div className="relative w-full overflow-hidden space-y-4 [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)]">
-                {testimonialRows.map((row, rowIndex) => (
-                  <div
-                    key={rowIndex}
-                    className="flex w-max space-x-4"
+            <div className="w-full text-center">
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.8 }}
+              >
+                {/* Animated Reader Count - New Design */}
+                <div className="mb-8 flex justify-center">
+                  <span
+                    className="text-4xl md:text-5xl font-extrabold tracking-tight"
                     style={{
-                      animation: `scroll ${row.duration}s linear infinite`,
-                      animationDirection: row.reverse ? 'reverse' : 'normal',
+                      fontFamily: 'Montserrat, Inter, "Orbitron", Arial, sans-serif',
+                      letterSpacing: '0.01em',
+                      color: '#eaf6ff',
+                      textShadow: '0 0 16px #fff, 0 0 32px #06B6D4, 0 0 48px #8B5CF6',
+                      filter: 'drop-shadow(0 0 16px #8B5CF6) drop-shadow(0 0 32px #06B6D4)',
                     }}
                   >
-                    {row.items.map((testimonial, index) => (
-                      <div key={`${rowIndex}-${index}`} className="w-max flex-shrink-0">
-                        <div className="flex items-center p-4 bg-gray-900/50 rounded-lg border border-gray-800/80 hover:border-blue-500/50 transition-colors duration-300">
-                          <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-300 font-bold shrink-0">
-                            {testimonial.initials}
-                          </div>
-                          <div className="ml-4 text-left">
-                            <p className="font-semibold text-white leading-tight">{testimonial.name}</p>
-                            <p className="text-sm text-gray-400 leading-tight">{`"${testimonial.text}"`}</p>
+                    {/* Animated count up for 20 */}
+                    <AnimatedCount to={20} duration={2200} />
+                    <span style={{ marginLeft: '2px' }}>+</span>
+                    <span className="ml-2 font-bold">
+                      people have read the document.
+                    </span>
+                  </span>
+                </div>
+                {/* End Animated Reader Count */}
+                <div className="relative w-full overflow-hidden space-y-4 [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)]">
+                  {testimonialRows.map((row, rowIndex) => (
+                    <div
+                      key={rowIndex}
+                      className="flex w-max space-x-4"
+                      style={{
+                        animation: `scroll ${row.duration}s linear infinite`,
+                        animationDirection: row.reverse ? 'reverse' : 'normal',
+                      }}
+                    >
+                      {row.items.map((testimonial, index) => (
+                        <div key={`${rowIndex}-${index}`} className="w-max flex-shrink-0">
+                          <div className="flex items-center p-4 bg-gray-900/50 rounded-lg border border-gray-800/80 hover:border-blue-500/50 transition-colors duration-300">
+                            <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-300 font-bold shrink-0">
+                              {testimonial.initials}
+                            </div>
+                            <div className="ml-4 text-left">
+                              <p className="font-semibold text-white leading-tight">{testimonial.name}</p>
+                              <p className="text-sm text-gray-400 leading-tight">{`"${testimonial.text}"`}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            </div>
           </section>
         )}
       </main>
 
       {/* Footer */}
-      <motion.footer
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.7 }}
-        className="w-full text-center p-8 text-gray-500 text-sm space-y-4"
-      >
-        <div className="flex justify-center items-center space-x-6">
-          <a href="https://x.com/cxp1611642" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors"><Twitter /></a>
-          <a href="https://github.com/cxp-13" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors"><Github /></a>
-        </div>
-        <div>
-          <p className="font-light">&copy;2025 lantianlaoli@gmail.com</p>
-        </div>
-      </motion.footer>
+      <div className="w-full text-center p-8 text-gray-500 text-sm space-y-4">
+        <motion.footer
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.7 }}
+        >
+          <div className="flex justify-center items-center space-x-6">
+            <a href="https://x.com/cxp1611642" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors"><Twitter /></a>
+            <a href="https://github.com/cxp-13" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors"><Github /></a>
+          </div>
+          <div>
+            <p className="font-light">&copy;2025 lantianlaoli@gmail.com</p>
+          </div>
+        </motion.footer>
+      </div>
 
       {/* Admin Password Modal */}
-      <AnimatePresence>
-        {showPwdModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-            onClick={() => setShowPwdModal(false)}
-          >
+      {showPwdModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowPwdModal(false)}>
+          <div className="bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 w-full max-w-md" onClick={e => e.stopPropagation()}>
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-2xl p-8 w-full max-w-md"
             >
               <form onSubmit={handleAdminLogin} className="space-y-6">
                 <div className="text-center">
@@ -543,9 +552,9 @@ export default function Home() {
                 </div>
               </form>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

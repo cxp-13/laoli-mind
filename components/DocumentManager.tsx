@@ -1,5 +1,7 @@
 'use client';
 
+export const dynamic = "force-dynamic";
+
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
@@ -21,8 +23,7 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { Document } from '@/app/types';
-
-
+import { Suspense } from 'react';
 
 interface DocumentManagerProps {
   documents: Document[];
@@ -276,26 +277,18 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
         </Dialog>
       </div>
 
-      <motion.div 
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-        initial="hidden"
-        animate="visible"
-        variants={{
-          visible: {
-            transition: {
-              staggerChildren: 0.05,
-            },
-          },
-        }}
-      >
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {documents.length > 0 ? (
-          documents.map((doc) => (
+          documents.map((doc, idx) => (
             <motion.div
               key={doc.id}
+              initial="hidden"
+              animate="visible"
               variants={{
                 hidden: { opacity: 0, y: 20 },
                 visible: { opacity: 1, y: 0 },
               }}
+              transition={{ delay: idx * 0.05 }}
             >
               <Card className="bg-gray-900/50 border-gray-800 h-full flex flex-col">
                 <CardHeader>
@@ -349,7 +342,7 @@ export function DocumentManager({ documents, onRefresh }: DocumentManagerProps) 
             <p className="mt-1 text-sm text-gray-500">Create a new document to get started.</p>
           </div>
         )}
-      </motion.div>
+      </div>
 
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="bg-gray-900 border-gray-800 text-white">

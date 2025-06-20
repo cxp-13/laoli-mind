@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
@@ -17,12 +17,21 @@ export interface AccessDocument extends Document {
 }
 
 export default function AccessPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AccessPageContent />
+    </Suspense>
+  );
+}
+
+function AccessPageContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email');
   const [documents, setDocuments] = useState<AccessDocument[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showCelebration, setShowCelebration] = useState(false);
   const [firstAccessDoc, setFirstAccessDoc] = useState<AccessDocument | null>(null);
+  const [showPwdModal, setShowPwdModal] = useState(false);
 
   useEffect(() => {
     const fetchDocuments = async () => {
@@ -223,93 +232,103 @@ export default function AccessPage() {
       {/* Celebration Modal */}
       <AnimatePresence>
         {showCelebration && firstAccessDoc && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4"
-            onClick={closeCelebration}
-          >
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="max-w-md w-full"
-            >
-              <Card className="border-gray-700 bg-gray-900 relative overflow-hidden">
-                {/* Celebration Effects */}
-                <div className="absolute inset-0 pointer-events-none">
-                  {[...Array(20)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute w-2 h-2 rounded-full bg-white"
-                      initial={{
-                        x: '50%',
-                        y: '50%',
-                        scale: 0,
-                      }}
-                      animate={{
-                        x: `${Math.random() * 100}%`,
-                        y: `${Math.random() * 100}%`,
-                        scale: [0, 1, 0],
-                        opacity: [0, 1, 0],
-                      }}
-                      transition={{
-                        duration: Math.random() * 1.5 + 0.5,
-                        repeat: Infinity,
-                        delay: i * 0.1,
-                      }}
-                    />
-                  ))}
-                </div>
-                
-                <CardHeader className="text-center relative z-10">
-                  <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto bg-gray-800 mb-4 border border-gray-700">
-                    <Gift className="w-8 h-8 text-white" />
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={closeCelebration}>
+            <div onClick={(e) => e.stopPropagation()} className="max-w-md w-full">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.8, opacity: 0 }}
+              >
+                <Card className="border-gray-700 bg-gray-900 relative overflow-hidden">
+                  {/* Celebration Effects */}
+                  <div className="absolute inset-0 pointer-events-none">
+                    {[...Array(20)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        style={{
+                          position: 'absolute',
+                          width: '0.5rem',
+                          height: '0.5rem',
+                          borderRadius: '9999px',
+                          background: '#fff',
+                        }}
+                        initial={{
+                          x: '50%',
+                          y: '50%',
+                          scale: 0,
+                        }}
+                        animate={{
+                          x: `${Math.random() * 100}%`,
+                          y: `${Math.random() * 100}%`,
+                          scale: [0, 1, 0],
+                          opacity: [0, 1, 0],
+                        }}
+                        transition={{
+                          duration: Math.random() * 1.5 + 0.5,
+                          repeat: Infinity,
+                          delay: i * 0.1,
+                        }}
+                      />
+                    ))}
                   </div>
-                  <CardTitle className="text-2xl font-bold text-white">
-                    First Access Unlocked!
-                  </CardTitle>
-                  <CardDescription className="text-gray-400 mt-2">
-                    You&#39;ve gained access to: <br />
-                    <strong className="text-white">{firstAccessDoc.title}</strong>
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="text-center relative z-10">
-                  <p className="text-gray-400 mb-6">
-                    A confirmation email with the document link has been sent to you.
-                  </p>
-                  <Button
-                    onClick={closeCelebration}
-                    className="w-full bg-gray-200 text-black font-bold hover:bg-gray-300"
-                  >
-                    Got it!
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </motion.div>
+                  
+                  <CardHeader className="text-center relative z-10">
+                    <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto bg-gray-800 mb-4 border border-gray-700">
+                      <Gift className="w-8 h-8 text-white" />
+                    </div>
+                    <CardTitle className="text-2xl font-bold text-white">
+                      First Access Unlocked!
+                    </CardTitle>
+                    <CardDescription className="text-gray-400 mt-2">
+                      You&#39;ve gained access to: <br />
+                      <strong className="text-white">{firstAccessDoc.title}</strong>
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="text-center relative z-10">
+                    <p className="text-gray-400 mb-6">
+                      A confirmation email with the document link has been sent to you.
+                    </p>
+                    <Button
+                      onClick={closeCelebration}
+                      className="w-full bg-gray-200 text-black font-bold hover:bg-gray-300"
+                    >
+                      Got it!
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </div>
+          </div>
         )}
       </AnimatePresence>
       
       {/* Feedback Button */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-        className="fixed bottom-8 right-8 z-20"
-      >
-        <a
-          href="https://docs.google.com/forms/d/e/1FAIpQLSfSgjX5KtEH8aJmOIE2aEbIA0KkvbGaIVdOMrMnUQ5AUUcyBA/viewform"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-3 px-4 py-3 bg-gray-900/80 backdrop-blur-sm text-white font-semibold rounded-full shadow-lg border border-gray-700 hover:bg-gray-800 transition-all"
+      <div className="fixed bottom-8 right-8 z-20">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
         >
-          <Sparkles className="w-5 h-5" />
-          Feedback
-        </a>
-      </motion.div>
+          <a
+            href="https://docs.google.com/forms/d/e/1FAIpQLSfSgjX5KtEH8aJmOIE2aEbIA0KkvbGaIVdOMrMnUQ5AUUcyBA/viewform"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 px-4 py-3 bg-gray-900/80 backdrop-blur-sm text-white font-semibold rounded-full shadow-lg border border-gray-700 hover:bg-gray-800 transition-all"
+          >
+            <Sparkles className="w-5 h-5" />
+            Feedback
+          </a>
+        </motion.div>
+      </div>
+
+      {/* Admin Password Modal */}
+      {showPwdModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4" onClick={() => setShowPwdModal(false)}>
+          <div className="bg-gray-900/95 ..." onClick={e => e.stopPropagation()}>
+            ...
+          </div>
+        </div>
+      )}
     </div>
   );
 }
