@@ -54,7 +54,6 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
 
   useEffect(() => {
     setSelectDoc(documents.find(doc => String(doc.id) === String(formData.document_id)));
-    console.log('selectDoc:', selectDoc)
   }, [formData, documents]);
 
   const resetForm = () => {
@@ -243,7 +242,7 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
               </div>
               <h3 className="text-xl font-semibold text-gray-300">No permissions</h3>
               <p className="text-gray-500 max-w-md mx-auto">
-                No access permissions have been assigned yet. Click the "Assign Permission" button above to assign document access to users.
+                No access permissions have been assigned yet. Click the &quot;Assign Permission&quot; button above to assign document access to users.
               </p>
             </div>
           </CardContent>

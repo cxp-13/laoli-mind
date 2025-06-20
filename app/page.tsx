@@ -95,7 +95,7 @@ export default function Home() {
       clearTimeout(typingTimeout);
       clearInterval(cursorInterval);
     };
-  }, [charIndex, isTyping]);
+  }, [charIndex, isTyping, typingPauses]);
 
   useEffect(() => {
     const fetchPermissionCount = async () => {

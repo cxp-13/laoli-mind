@@ -25,38 +25,34 @@ export default function AccessPage() {
   const [firstAccessDoc, setFirstAccessDoc] = useState<AccessDocument | null>(null);
 
   useEffect(() => {
+    const fetchDocuments = async () => {
+      try {
+        const response = await fetch(`/api/documents?email=${encodeURIComponent(email!)}`);
+        const data = await response.json();
+        if (data.success) {
+          setDocuments(data.documents);
+          // Check if there's a first-time access document
+          const firstAccess = data.documents.find((doc: AccessDocument) => doc.first_access);
+          if (firstAccess) {
+            setFirstAccessDoc(firstAccess);
+            setShowCelebration(true);
+            // Send thank you email and mark as accessed
+            await markAsAccessed(firstAccess.id);
+          }
+        } else {
+          toast.error(data.error || '获取文档失败');
+        }
+      } catch (error) {
+        console.error('Error fetching documents:', error);
+        toast.error('获取文档时出错');
+      } finally {
+        setIsLoading(false);
+      }
+    };
     if (email) {
       fetchDocuments();
     }
   }, [email]);
-
-  const fetchDocuments = async () => {
-    try {
-      const response = await fetch(`/api/documents?email=${encodeURIComponent(email!)}`);
-      const data = await response.json();
-      
-      if (data.success) {
-        setDocuments(data.documents);
-        
-        // Check if there's a first-time access document
-        const firstAccess = data.documents.find((doc: AccessDocument) => doc.first_access);
-        if (firstAccess) {
-          setFirstAccessDoc(firstAccess);
-          setShowCelebration(true);
-          
-          // Send thank you email and mark as accessed
-          await markAsAccessed(firstAccess.id);
-        }
-      } else {
-        toast.error(data.error || '获取文档失败');
-      }
-    } catch (error) {
-      console.error('Error fetching documents:', error);
-      toast.error('获取文档时出错');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const markAsAccessed = async (documentId: string) => {
     try {
@@ -276,7 +272,7 @@ export default function AccessPage() {
                     First Access Unlocked!
                   </CardTitle>
                   <CardDescription className="text-gray-400 mt-2">
-                    You've gained access to: <br />
+                    You&#39;ve gained access to: <br />
                     <strong className="text-white">{firstAccessDoc.title}</strong>
                   </CardDescription>
                 </CardHeader>

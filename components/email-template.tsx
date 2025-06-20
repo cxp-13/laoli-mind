@@ -18,7 +18,7 @@ export const EmailTemplate: React.FC<Readonly<EmailTemplateProps>> = ({
       At this moment, you have taken an important step into the world of Web3.
     </p>
     <p>
-      I am Lantian Laoli, and I'm delighted to meet you in this wave of the times.<br />
+      I am Lantian Laoli, and I&#39;m delighted to meet you in this wave of the times.<br />
       Your comment and access permission have been granted. Here is your portal:
     </p>
     <p>
