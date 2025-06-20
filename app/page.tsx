@@ -19,8 +19,8 @@ const EMAIL_SUFFIXES = [
   '@hotmail.com', '@icloud.com', '@yahoo.com', '@foxmail.com', '@protonmail.com'
 ];
 
-// AnimatedCount component for the number
-function AnimatedCount({ to = 20, duration = 2000 }: { to?: number; duration?: number }) {
+// AnimatedCount component for the number, with neon style matching the logo
+function AnimatedCount({ to = 20, duration = 2200 }: { to?: number; duration?: number }) {
   const spring = useSpring({
     from: { val: 1 },
     to: { val: to },
@@ -31,9 +31,15 @@ function AnimatedCount({ to = 20, duration = 2000 }: { to?: number; duration?: n
     <animated.span style={{
       display: 'inline-block',
       minWidth: '2ch',
-      color: '#8B5CF6',
-      textShadow: '0 0 12px #8B5CF6, 0 0 32px #06B6D4',
-    }} className="font-extrabold">
+      color: '#eaf6ff',
+      fontWeight: 800,
+      textShadow: '0 0 16px #fff, 0 0 32px #06B6D4, 0 0 48px #8B5CF6',
+      filter: 'drop-shadow(0 0 16px #8B5CF6) drop-shadow(0 0 32px #06B6D4)',
+      fontFamily: 'Montserrat, Inter, "Orbitron", Arial, sans-serif',
+      fontSize: 'inherit',
+      letterSpacing: '0.01em',
+      verticalAlign: 'baseline',
+    }}>
       {spring.val.to((v: number) => Math.floor(v))}
     </animated.span>
   );
@@ -62,22 +68,12 @@ export default function Home() {
   const [isTyping, setIsTyping] = useState(true);
   const [charIndex, setCharIndex] = useState(0);
   const [showCursor, setShowCursor] = useState(true);
-  const typingSpeed = 120; // ms per character (deliberate, slower)
-  const pauseDuration = 900; // ms for pronounced pauses
+  const typingSpeed = 220; // ms per character (deliberate, slower)
+  const pauseDuration = 1200; // ms for pronounced pauses
 
   useEffect(() => {
     let typingTimeout: NodeJS.Timeout;
-    let cursorInterval: NodeJS.Timeout;
-
-    // Blinking cursor
-    if (isTyping) {
-      cursorInterval = setInterval(() => {
-        setShowCursor((prev) => !prev);
-      }, 500);
-    } else {
-      setShowCursor(false);
-    }
-
+    // 立即开始，无初始延迟
     if (isTyping) {
       if (charIndex < dynamicText.length) {
         const isPause = typingPauses.includes(charIndex);
@@ -87,13 +83,10 @@ export default function Home() {
         }, isPause ? pauseDuration : typingSpeed);
       } else {
         setIsTyping(false);
-        setShowCursor(false);
       }
     }
-
     return () => {
       clearTimeout(typingTimeout);
-      clearInterval(cursorInterval);
     };
   }, [charIndex, isTyping, typingPauses]);
 
@@ -265,7 +258,7 @@ export default function Home() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.8, ease: "easeOut" }}
-              className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white leading-none select-none"
+              className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white leading-none select-none relative"
               style={{
                 fontFamily: "'Brush Script MT', 'Marker Felt', 'Comic Sans MS', cursive",
                 fontWeight: '900',
@@ -279,28 +272,71 @@ export default function Home() {
                 transform: 'rotate(-1deg)',
               }}
             >
-              laoliMind
+              laoli
+              <span style={{ position: 'relative', display: 'inline-block' }}>
+                Mind
+                {/* Badge precisely at top-right of 'Mind' */}
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '-1.6em',
+                    right: '-1.2em',
+                    display: 'inline-block',
+                    padding: '0.13em 0.7em',
+                    borderRadius: '0.9em',
+                    fontFamily: "'Brush Script MT', 'Marker Felt', 'Comic Sans MS', cursive",
+                    fontWeight: 700,
+                    fontSize: '0.85rem',
+                    letterSpacing: '0.01em',
+                    background: 'linear-gradient(90deg, #8B5CF6 30%, #06B6D4 100%)',
+                    color: '#fff',
+                    opacity: 0.82,
+                    boxShadow: '0 1.5px 8px #8B5CF6, 0 0 12px #06B6D4, 0 1px 4px #000',
+                    textShadow: '0 0 4px #8B5CF6, 0 0 8px #06B6D4',
+                    border: '1px solid #8B5CF6',
+                    filter: 'drop-shadow(0 1.5px 4px #06B6D4)',
+                    userSelect: 'none',
+                    transform: 'rotate(2deg)',
+                    backgroundClip: 'padding-box',
+                    zIndex: 10,
+                    pointerEvents: 'none',
+                  }}
+                >
+                  Built with Bolt.new
+                </span>
+              </span>
             </motion.h1>
 
             {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3, duration: 0.6 }}
+            <div
               className="text-lg sm:text-xl text-gray-400 max-w-2xl font-light flex flex-wrap items-center justify-center gap-1 min-h-[2.5em]"
               aria-label="Access curated docs, AI startup resources, and actionable SaaS templates."
+              style={{ position: 'relative' }}
             >
-              {staticIntro}
+              <span>{staticIntro}</span>
               <span className="inline-flex items-center mx-1 align-middle">
                 <Image src="/notion.png" alt="Notion" width={28} height={28} className="inline-block align-middle rounded-sm shadow-md" style={{ marginBottom: '-4px' }} />
               </span>
-              <span className="inline-block">
+              <span className="inline-block" style={{ position: 'relative' }}>
                 {typedText}
+                {/* Standard blinking caret, only during typing */}
                 {isTyping && (
-                  <span className="border-r-2 border-blue-400 ml-0.5 animate-blink" style={{ height: '1.2em', verticalAlign: 'middle' }} aria-hidden="true" />
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: '1px',
+                      height: '1.2em',
+                      background: '#fff',
+                      marginLeft: '2px',
+                      borderRadius: '1px',
+                      animation: 'blink 1s steps(2, start) infinite',
+                      verticalAlign: 'middle',
+                    }}
+                    aria-hidden="true"
+                  />
                 )}
               </span>
-            </motion.p>
+            </div>
 
             {/* Content Section */}
             <div className="w-full max-w-md relative space-y-4">
@@ -374,23 +410,24 @@ export default function Home() {
               transition={{ delay: 0.2, duration: 0.8 }}
               className="w-full text-center"
             >
-              {/* Animated Reader Count */}
+              {/* Animated Reader Count - New Design */}
               <div className="mb-8 flex justify-center">
                 <span
-                  className="text-3xl md:text-4xl font-extrabold tracking-tight"
+                  className="text-4xl md:text-5xl font-extrabold tracking-tight"
                   style={{
-                    fontFamily: 'Inter, "JetBrains Mono", "Montserrat", "Orbitron", Arial, sans-serif',
+                    fontFamily: 'Montserrat, Inter, "Orbitron", Arial, sans-serif',
                     letterSpacing: '0.01em',
-                    color: '#fff',
-                    textShadow: '0 0 12px #8B5CF6, 0 0 32px #06B6D4',
-                    background: 'linear-gradient(90deg, #8B5CF6 30%, #06B6D4 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
+                    color: '#eaf6ff',
+                    textShadow: '0 0 16px #fff, 0 0 32px #06B6D4, 0 0 48px #8B5CF6',
+                    filter: 'drop-shadow(0 0 16px #8B5CF6) drop-shadow(0 0 32px #06B6D4)',
                   }}
                 >
+                  {/* Animated count up for 20 */}
                   <AnimatedCount to={20} duration={2200} />
-                  <span className="text-3xl md:text-4xl font-extrabold align-baseline" style={{ color: '#8B5CF6', textShadow: '0 0 8px #8B5CF6' }}>+</span>
-                  <span className="ml-2 font-bold" style={{ color: '#fff', textShadow: '0 0 8px #06B6D4' }}>views on the document.</span>
+                  <span style={{ marginLeft: '2px' }}>+</span>
+                  <span className="ml-2 font-bold">
+                    people have read the document.
+                  </span>
                 </span>
               </div>
               {/* End Animated Reader Count */}

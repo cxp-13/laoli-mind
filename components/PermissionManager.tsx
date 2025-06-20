@@ -23,8 +23,6 @@ import { format } from 'date-fns';
 import { zhCN } from 'date-fns/locale';
 import { Document } from '@/app/types';
 
-
-
 interface Permission {
   id: string;
   email: string;
@@ -39,6 +37,9 @@ interface PermissionManagerProps {
   documents: Document[];
   onRefresh: () => void;
 }
+
+const typingSpeed = 60; // ms per character
+const pauseDuration = 400; // ms for pronounced pauses
 
 export function PermissionManager({ permissions, documents, onRefresh }: PermissionManagerProps) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
