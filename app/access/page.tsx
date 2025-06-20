@@ -6,10 +6,10 @@ import { useSearchParams } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Brain, ExternalLink, ArrowLeft, Sparkles, CheckCircle, Gift, Clock, Zap } from 'lucide-react';
+import { Brain, ExternalLink, ArrowLeft, Sparkles, CheckCircle, Gift, Clock, Zap, User, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { Document } from '../types';
-import { format } from 'date-fns';
+import { format, differenceInDays } from 'date-fns';
 
 export interface AccessDocument extends Document {
   first_access: boolean;
@@ -84,27 +84,26 @@ export default function AccessPage() {
   // Helper function to format deadline display
   const formatDeadline = (deadline: string | null | undefined) => {
     if (!deadline) {
-      return { text: 'Permanent Access', icon: <Zap className="w-3 h-3" />, variant: 'secondary' as const };
+      return { text: 'Permanent Access', icon: <Zap className="w-4 h-4" />, color: 'green' };
     }
     
     const deadlineDate = new Date(deadline);
     const now = new Date();
-    const timeDiff = deadlineDate.getTime() - now.getTime();
-    const daysLeft = Math.ceil(timeDiff / (1000 * 3600 * 24));
+    const daysLeft = differenceInDays(deadlineDate, now);
     
     if (daysLeft <= 0) {
-      return { text: 'Expired', icon: <Clock className="w-3 h-3" />, variant: 'destructive' as const };
+      return { text: 'Expired', icon: <Clock className="w-4 h-4" />, color: 'red' };
     } else if (daysLeft <= 7) {
       return { 
         text: `${daysLeft} day${daysLeft === 1 ? '' : 's'} left`, 
-        icon: <Clock className="w-3 h-3" />, 
-        variant: 'secondary' as const 
+        icon: <Clock className="w-4 h-4" />, 
+        color: 'orange'
       };
     } else {
       return { 
         text: `Expires ${format(deadlineDate, 'MMM dd, yyyy')}`, 
-        icon: <Clock className="w-3 h-3" />, 
-        variant: 'outline' as const 
+        icon: <Clock className="w-4 h-4" />, 
+        color: 'orange'
       };
     }
   };
@@ -135,16 +134,18 @@ export default function AccessPage() {
             Back
           </Button>
         </div>
-        <Badge variant="outline" className="border-gray-700 bg-gray-900 text-gray-300">
-          {email}
-        </Badge>
+        <div className="flex items-center gap-2">
+          <User className="w-5 h-5 text-gray-400" />
+          <span className="text-gray-300">{email}</span>
+          <ChevronDown className="w-4 h-4 text-gray-500" />
+        </div>
       </header>
 
       {/* Main Content */}
       <main className="px-4 py-8 flex-1">
         <div className="max-w-4xl mx-auto">
           {documents.length === 0 ? (
-            <Card className="border-gray-800 text-center py-12 bg-gray-900/50">
+            <Card className="border-gray-800 text-center py-12 bg-zinc-900">
               <CardContent>
                 <div className="space-y-4">
                   <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto bg-gray-800">
@@ -159,16 +160,22 @@ export default function AccessPage() {
             </Card>
           ) : (
             <div className="space-y-6">
-              <div className="text-center space-y-2">
-                <h1 className="text-3xl md:text-5xl font-extrabold text-white">Your Exclusive Content</h1>
-                <p className="text-lg text-gray-400">
-                  You have <span className="font-bold text-white">{documents.length}</span> accessible documents
+              <div className="text-center space-y-2 mb-10">
+                <h1 className="text-4xl md:text-5xl font-extrabold text-white" style={{ textShadow: '0 2px 8px rgba(255, 255, 255, 0.15)' }}>Your Exclusive Content</h1>
+                <p className="text-lg text-gray-500">
+                  You have <span className="font-bold text-gray-300">{documents.length}</span> accessible documents
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {documents.map((doc, index) => {
                   const deadlineInfo = formatDeadline(doc.deadline);
+                  const deadlineColorClasses = {
+                    green: 'bg-green-800/50 text-green-300 border-green-500/20',
+                    orange: 'bg-orange-800/50 text-orange-300 border-orange-500/20',
+                    red: 'bg-red-800/50 text-red-300 border-red-500/20',
+                  };
+
                   return (
                     <motion.div
                       key={doc.id}
@@ -176,41 +183,35 @@ export default function AccessPage() {
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                      <Card className="border-gray-800 hover:border-gray-700 transition-all duration-300 h-full bg-gray-900/50 flex flex-col">
+                      <Card className="bg-zinc-900 border border-transparent hover:border-gray-700 flex flex-col shadow-[0_8px_16px_rgba(0,0,0,0.3)] hover:scale-[1.02] transition-all duration-200 ease-in-out h-full">
                         <CardHeader className="flex-1">
-                          <CardTitle className="text-lg line-clamp-2 text-white">
+                          <CardTitle className="text-lg text-white">
                             {doc.title}
                           </CardTitle>
-                          <CardDescription className="line-clamp-3 text-gray-400 mb-2">
+                          <CardDescription className="text-gray-400 mb-4 leading-relaxed">
                             {doc.introduction}
                           </CardDescription>
-                          <div className="flex flex-row gap-2 mt-2">
+                          <div className="flex flex-wrap gap-2 mt-2">
                             {!doc.first_access && (
-                              <Badge variant="secondary" className="rounded-full px-3 py-1 text-xs font-semibold flex items-center bg-gray-700 text-gray-300">
-                                <CheckCircle className="w-3 h-3 mr-1" />
-                                Accessed
+                              <Badge className="flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded-md bg-gray-700 text-gray-300 border-none">
+                                <CheckCircle className="w-4 h-4" />
+                                <span>Accessed</span>
                               </Badge>
                             )}
-                            <Badge 
-                              variant={deadlineInfo.variant} 
-                              className={`rounded-full px-3 py-1 text-xs font-semibold flex items-center ${
-                                deadlineInfo.variant === 'destructive' ? 'bg-red-900/50 text-red-300 border border-red-500/30' : 
-                                deadlineInfo.variant === 'secondary' ? 'bg-gray-700 text-gray-300' : 'border-gray-600'
-                              }`}
-                            >
+                            <Badge className={`flex items-center gap-2 px-3 py-1 text-xs font-semibold rounded-md border ${deadlineColorClasses[deadlineInfo.color as keyof typeof deadlineColorClasses]}`}>
                               {deadlineInfo.icon}
-                              {deadlineInfo.text}
+                              <span>{deadlineInfo.text}</span>
                             </Badge>
                           </div>
                         </CardHeader>
-                        <CardContent>
+                        <CardContent className="mt-auto">
                           <Button
                             onClick={() => handleDocumentAccess(doc)}
-                            className="w-full bg-gray-200 text-black font-bold hover:bg-gray-300 disabled:bg-gray-800 disabled:text-gray-500 transition-all"
-                            disabled={deadlineInfo.variant === 'destructive'}
+                            className="w-full bg-gray-200 text-black font-bold hover:bg-white disabled:bg-gray-800 disabled:text-gray-500 transition-all active:scale-[0.98]"
+                            disabled={deadlineInfo.color === 'red'}
                           >
                             <ExternalLink className="w-4 h-4 mr-2" />
-                            {deadlineInfo.variant === 'destructive' ? 'Expired' : 'View Document'}
+                            {deadlineInfo.color === 'red' ? 'Expired' : 'View Document'}
                           </Button>
                         </CardContent>
                       </Card>

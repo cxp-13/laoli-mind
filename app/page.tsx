@@ -1,10 +1,16 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Check, Sparkles } from 'lucide-react';
-import { useRef, useState } from 'react';
+import { Check, Sparkles, Send, Twitter, Github, Mail } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { motion, AnimatePresence } from 'framer-motion';
+
+interface Testimonial {
+  name: string;
+  initials: string;
+  text: string;
+}
 
 const EMAIL_SUFFIXES = [
   '@gmail.com', '@qq.com', '@163.com', '@126.com', '@outlook.com',
@@ -22,6 +28,52 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+  const [permissionCount, setPermissionCount] = useState<number | null>(null);
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
+
+  useEffect(() => {
+    const fetchPermissionCount = async () => {
+      try {
+        const response = await fetch('/api/permissions-count');
+        const data = await response.json();
+        if (data.success) {
+          setPermissionCount(data.count);
+        }
+      } catch (error) {
+        console.error('Error fetching permission count:', error);
+      }
+    };
+
+    const fetchTestimonials = async () => {
+      try {
+        const response = await fetch('/api/testimonials');
+        const data = await response.json();
+        if (data.success && data.testimonials.length > 0) {
+          setTestimonials(data.testimonials);
+        }
+      } catch (error) {
+        console.error('Error fetching testimonials:', error);
+      }
+    };
+
+    fetchPermissionCount();
+    fetchTestimonials();
+  }, []);
+
+  const getFormattedCountText = (count: number | null): string => {
+    if (count === null) {
+      return '...';
+    }
+
+    if (count < 10) {
+      return ''; // Don't show for very small numbers
+    }
+    
+    const magnitude = Math.pow(10, Math.floor(Math.log10(count)));
+    const roundedCount = Math.floor(count / magnitude) * magnitude;
+    
+    return `${roundedCount.toLocaleString()}+ people have read the document.`;
+  };
 
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,8 +171,25 @@ export default function Home() {
     inputRef.current?.focus();
   };
 
+  const testimonialRows = testimonials.length > 0 ? [
+    { items: [...testimonials, ...testimonials], duration: 120 },
+    { items: [...testimonials.slice(testimonials.length / 2), ...testimonials.slice(0, testimonials.length / 2), ...testimonials.slice(testimonials.length / 2), ...testimonials.slice(0, testimonials.length / 2)], duration: 90, reverse: true },
+    { items: [...testimonials.slice(3), ...testimonials.slice(0,3), ...testimonials.slice(3), ...testimonials.slice(0,3)], duration: 150 },
+  ] : [];
+
+
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col relative font-sans">
+    <div className="min-h-screen bg-black text-white flex flex-col relative font-sans" style={{ background: 'radial-gradient(circle at center, #1c1c1c, #000000)'}}>
+      <style jsx global>{`
+        @keyframes scroll {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-50%);
+          }
+        }
+      `}</style>
       {/* Admin Button - Fixed Position */}
       <div className="absolute top-6 right-6 z-50">
         <Button
@@ -133,131 +202,153 @@ export default function Home() {
       </div>
 
       {/* Main Content Container */}
-      <main className="flex-1 flex flex-col items-center justify-center text-center px-4 w-full">
-        <div className="flex flex-col items-center justify-center w-full max-w-4xl space-y-12">
-          {/* Graffiti Title - Reasonable size */}
-          <motion.h1 
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white leading-none select-none"
-            style={{ 
-              fontFamily: "'Brush Script MT', 'Marker Felt', 'Comic Sans MS', cursive",
-              fontWeight: '900',
-              letterSpacing: '-0.02em',
-              textShadow: `
-                2px 2px 0px #333,
-                4px 4px 0px #666,
-                6px 6px 0px #999,
-                8px 8px 15px rgba(0,0,0,0.6)
-              `,
-              transform: 'rotate(-1deg)',
-              WebkitTextStroke: '1px #fff',
-              filter: 'drop-shadow(0 0 20px rgba(255,255,255,0.2))'
-            }}
-          >
-            laoliMind
-          </motion.h1>
+      <main className="flex-1 flex flex-col w-full">
+        {/* Hero Section */}
+        <section className="min-h-screen flex flex-col items-center justify-center text-center px-4 w-full">
+          <div className="flex flex-col items-center w-full max-w-4xl space-y-12">
+            {/* Graffiti Title */}
+            <motion.h1 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-white leading-none select-none"
+              style={{ 
+                fontFamily: "'Brush Script MT', 'Marker Felt', 'Comic Sans MS', cursive",
+                fontWeight: '900',
+                letterSpacing: '-0.02em',
+                textShadow: `
+                  0 0 10px rgba(255, 255, 255, 0.2),
+                  0 0 20px rgba(255, 255, 255, 0.2),
+                  0 0 40px rgba(110, 231, 183, 0.5),
+                  0 0 80px rgba(59, 130, 246, 0.5)
+                `,
+                transform: 'rotate(-1deg)',
+              }}
+            >
+              laoliMind
+            </motion.h1>
 
-          {/* Content Section */}
-          <div className="w-full max-w-2xl relative space-y-8">
-            {/* Subtitle with Badge - Closer positioning */}
-            <div className="relative inline-block">
-              <motion.p 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-                className="text-xl sm:text-2xl text-gray-300 font-light inline-flex items-center gap-2 flex-wrap justify-center"
-              >
-                Enter your email, access the{' '}
-                <span className="inline-flex items-center gap-1">
-                  {/* Notion Logo */}
-                  <img 
-                    src="/upscalemedia-transformed.png" 
-                    alt="Notion" 
-                    className="w-6 h-6 sm:w-7 sm:h-7 inline-block"
-                  />
-                  <span>documents</span>
-                </span>
-              </motion.p>
-              
-              {/* Built in Bolt.new Badge */}
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.8, rotate: 0 }}
-                animate={{ opacity: 1, scale: 1, rotate: 12 }}
-                transition={{ delay: 0.5, type: "spring", stiffness: 200 }}
-                className="absolute -top-2 -right-4 sm:-right-8 hidden sm:block"
-                style={{ transform: 'rotate(12deg)' }}
-              >
-                <a
-                  href="https://bolt.new"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="bg-black border border-gray-700/80 text-gray-300 px-2 py-0.5 text-[10px] font-semibold rounded-md shadow-lg hover:bg-gray-900 transition-all transform hover:scale-105"
-                >
-                  built in Bolt.new
-                </a>
-              </motion.div>
-            </div>
-
-            {/* Email Input Form */}
-            <motion.form 
+            {/* Subtitle */}
+            <motion.p 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
-              onSubmit={handleEmailSubmit} 
-              className="relative w-full max-w-md mx-auto"
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="text-lg sm:text-xl text-gray-400 max-w-2xl font-light"
             >
-              <div className="flex items-center">
-                <input
-                  ref={inputRef}
-                  type="email"
-                  value={email}
-                  onChange={handleEmailChange}
-                  onKeyDown={handleEmailKeyDown}
-                  onFocus={() => setIsInputFocused(true)}
-                  onBlur={() => setTimeout(() => setIsInputFocused(false), 150)}
-                  className="w-full pl-6 pr-16 py-4 bg-gray-800/80 backdrop-blur-sm rounded-xl text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 border border-gray-700/50 text-lg"
-                  placeholder="your@email.com"
-                  autoComplete="off"
-                  required
-                />
-                <Button
-                  type="submit"
-                  disabled={isLoading}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 p-2 rounded-full bg-transparent hover:bg-gray-700/50 text-white disabled:text-gray-500 transition-all"
-                >
-                  {isLoading ? (
-                    <div className="w-6 h-6 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    <Check className="w-6 h-6" />
-                  )}
-                </Button>
-              </div>
+              Access curated Notion docs, AI startup resources, and actionable SaaS templates.
+            </motion.p>
 
-              {/* Email Suggestions */}
-              {isInputFocused && showSuggestions && suggestions.length > 0 && (
-                <motion.ul 
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className="absolute left-0 right-0 top-full mt-2 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-xl shadow-xl z-20 max-h-48 overflow-y-auto text-left"
-                >
-                  {suggestions.map((s, idx) => (
-                    <li
-                      key={s}
-                      className={`px-6 py-3 text-white hover:bg-gray-800/50 cursor-pointer transition-colors text-lg ${
-                        selectedSuggestionIndex === idx ? 'bg-gray-700/50' : ''
-                      }`}
-                      onMouseDown={() => handleSuggestionClick(s)}
-                    >
-                      {s}
-                    </li>
-                  ))}
-                </motion.ul>
-              )}
-            </motion.form>
+            {/* Content Section */}
+            <div className="w-full max-w-md relative space-y-4">
+              {/* Email Input Form */}
+              <motion.form 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 }}
+                onSubmit={handleEmailSubmit} 
+                className="relative w-full mx-auto"
+              >
+                <div className="flex items-center">
+                  <input
+                    ref={inputRef}
+                    type="email"
+                    value={email}
+                    onChange={handleEmailChange}
+                    onKeyDown={handleEmailKeyDown}
+                    onFocus={() => setIsInputFocused(true)}
+                    onBlur={() => setTimeout(() => setIsInputFocused(false), 150)}
+                    className="w-full pl-6 pr-16 py-4 bg-gray-900/50 backdrop-blur-sm rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-blue-500 border border-gray-700/50 text-lg"
+                    placeholder="your@email.com"
+                    autoComplete="off"
+                    required
+                  />
+                  <Button
+                    type="submit"
+                    disabled={isLoading}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-3 rounded-lg bg-gradient-to-r from-teal-400 to-blue-500 text-white disabled:opacity-50 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/50 active:scale-95"
+                  >
+                    {isLoading ? (
+                      <div className="w-6 h-6 border-2 border-white/50 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <Send className="w-6 h-6" />
+                    )}
+                  </Button>
+                </div>
+
+                {/* Email Suggestions */}
+                {isInputFocused && showSuggestions && suggestions.length > 0 && (
+                  <motion.ul 
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute left-0 right-0 top-full mt-2 bg-gray-900/95 backdrop-blur-sm border border-gray-700/50 rounded-xl shadow-xl z-20 max-h-48 overflow-y-auto text-left"
+                  >
+                    {suggestions.map((s, idx) => (
+                      <li
+                        key={s}
+                        className={`px-6 py-3 text-white hover:bg-gray-800/50 cursor-pointer transition-colors text-lg ${
+                          selectedSuggestionIndex === idx ? 'bg-gray-700/50' : ''
+                        }`}
+                        onMouseDown={() => handleSuggestionClick(s)}
+                      >
+                        {s}
+                      </li>
+                    ))}
+                  </motion.ul>
+                )}
+              </motion.form>
+
+              {/* Social Proof */}
+              <motion.p 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.7 }}
+                className="text-sm text-gray-500 min-h-[20px]"
+              >
+                {getFormattedCountText(permissionCount)}
+              </motion.p>
+            </div>
           </div>
-        </div>
+        </section>
+
+        {/* Testimonial Section */}
+        {testimonials.length > 0 && (
+          <section className="w-full pb-24">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+              className="w-full text-center"
+            >
+              <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-8">Trusted by Founders Worldwide</h3>
+              <div className="relative w-full overflow-hidden space-y-4 [mask-image:linear-gradient(to_right,transparent,white_10%,white_90%,transparent)]">
+                {testimonialRows.map((row, rowIndex) => (
+                  <div
+                    key={rowIndex}
+                    className="flex w-max space-x-4"
+                    style={{
+                      animation: `scroll ${row.duration}s linear infinite`,
+                      animationDirection: row.reverse ? 'reverse' : 'normal',
+                    }}
+                  >
+                    {row.items.map((testimonial, index) => (
+                      <div key={`${rowIndex}-${index}`} className="w-max flex-shrink-0">
+                        <div className="flex items-center p-4 bg-gray-900/50 rounded-lg border border-gray-800/80 hover:border-blue-500/50 transition-colors duration-300">
+                          <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-300 font-bold shrink-0">
+                            {testimonial.initials}
+                          </div>
+                          <div className="ml-4 text-left">
+                            <p className="font-semibold text-white leading-tight">{testimonial.name}</p>
+                            <p className="text-sm text-gray-400 leading-tight">{`"${testimonial.text}"`}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          </section>
+        )}
       </main>
 
       {/* Footer */}
@@ -265,10 +356,15 @@ export default function Home() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.7 }}
-        className="w-full text-center p-4 text-gray-500 text-sm"
+        className="w-full text-center p-8 text-gray-500 text-sm space-y-4"
       >
-        <p className="font-light">Made by lantianlaoli</p>
-        <p className="font-light">&copy;2025 lantianlaoli@gmail.com</p>
+        <div className="flex justify-center items-center space-x-6">
+           <a href="https://x.com/cxp1611642" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors"><Twitter /></a>
+           <a href="https://github.com/cxp-13" target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-white transition-colors"><Github /></a>
+        </div>
+        <div>
+            <p className="font-light">&copy;2025 lantianlaoli@gmail.com</p>
+        </div>
       </motion.footer>
 
       {/* Admin Password Modal */}

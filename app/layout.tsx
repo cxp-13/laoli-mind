@@ -26,9 +26,7 @@ export const metadata: Metadata = {
     'Knowledge Platform',
     'Self-Service Access',
   ],
-  icons: {
-    icon: '/favicon.png',
-  },
+  icons: [{ rel: "icon", url: "/favicon.png" }],
   openGraph: {
     title: 'LaoliMind',
     description: 'Provide notice information collection service for Lantianlaoli',
@@ -59,7 +57,6 @@ export const metadata: Metadata = {
     'google-site-verification': 'TzNZIjYP45gXInPSyykjt9fY85Qgun7nS23oY4l9Sqg',
   },
 };
-
 
 export default function RootLayout({
   children,

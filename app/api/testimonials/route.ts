@@ -1,62 +1,73 @@
+import { createClient } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+
+// Hardcoded testimonial texts to be paired with real user data
+const testimonialTexts = [
+  "These Notion docs helped me launch my MVP in just a week. Amazing!",
+  "The SaaS templates are a game-changer. Saved me countless hours of design and development work.",
+  "Actionable, insightful, and beautifully organized. The AI resources are top-notch and exactly what my team needed.",
+  "The best curated collection of startup resources I've found online. A must-have for any aspiring founder.",
+  "The marketing playbooks are pure gold. Our user acquisition has doubled since we implemented them.",
+  "Finally, a set of resources that respects your time. Concise, yet incredibly powerful.",
+];
+
+// Helper function to format email addresses into a more presentable name and initials
+function formatEmail(email: string) {
+  const emailUser = email.split('@')[0].replace(/[\._-]/g, ' ');
+  const nameParts = emailUser.split(' ');
+
+  let name = '';
+  let initials = '';
+
+  if (nameParts.length > 1) {
+    name = `${nameParts[0].charAt(0).toUpperCase()}${nameParts[0].slice(1)} ${nameParts[1].charAt(0).toUpperCase()}.`;
+    initials = `${nameParts[0].charAt(0)}${nameParts[1].charAt(0)}`.toUpperCase();
+  } else {
+    name = `${emailUser.charAt(0).toUpperCase()}${emailUser.slice(1)}`;
+    initials = `${emailUser.charAt(0)}${emailUser.charAt(1) || ''}`.toUpperCase();
+  }
+  
+  return { name, initials };
+}
+
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    // 1. 查询 email_permissions
-    const { data: permissions, error: permError } = await supabase
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_KEY!
+    );
+
+    // Fetch the last 20 granted permissions
+    const { data: permissions, error } = await supabase
       .from('email_permissions')
-      .select('id, email, first_access, created_at, document_id')
+      .select('email')
       .order('created_at', { ascending: false })
       .limit(20);
 
-    if (permError) {
-      console.error('Error fetching permissions:', permError);
-      return NextResponse.json(
-        { success: false, error: 'Database error' },
-        { status: 500 }
-      );
+    if (error) {
+      throw error;
     }
 
-    // 2. 收集所有 document_id
-    const docIds = Array.from(new Set((permissions || []).map(p => p.document_id)));
-
-    // 3. 查询 documents 表
-    let documentsMap: Record<string, { title: string }> = {};
-    if (docIds.length > 0) {
-      const { data: documents, error: docError } = await supabase
-        .from('documents')
-        .select('id, title')
-        .in('id', docIds);
-
-      if (docError) {
-        console.error('Error fetching documents:', docError);
-      } else {
-        documentsMap = (documents || []).reduce((acc, doc) => {
-          acc[doc.id] = { title: doc.title };
-          return acc;
-        }, {} as Record<string, { title: string }>);
-      }
+    if (!permissions || permissions.length === 0) {
+      return NextResponse.json({ success: true, testimonials: [] });
     }
 
-    // 4. 合并数据
-    const testimonials = (permissions || []).map(perm => ({
-      id: perm.id,
-      email: perm.email,
-      document_title: documentsMap[perm.document_id]?.title || 'Untitled Document',
-      created_at: perm.created_at,
-      first_access: perm.first_access,
-    }));
-
-    return NextResponse.json({
-      success: true,
-      testimonials,
+    // Combine fetched user data with hardcoded testimonial texts
+    const testimonials = permissions.map((permission, index) => {
+      const { name, initials } = formatEmail(permission.email);
+      return {
+        name,
+        initials,
+        text: testimonialTexts[index % testimonialTexts.length], // Cycle through testimonial texts
+      };
     });
-  } catch (error) {
-    console.error('Error in testimonials API:', error);
-    return NextResponse.json(
-      { success: false, error: 'Internal server error' },
-      { status: 500 }
-    );
+
+    return NextResponse.json({ success: true, testimonials });
+
+  } catch (error: any) {
+    console.error('Error fetching testimonials:', error);
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
