@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabase';
 import { NextResponse } from 'next/server';
 
 // Hardcoded testimonial texts to be paired with real user data
@@ -26,7 +26,7 @@ function formatEmail(email: string) {
     name = `${emailUser.charAt(0).toUpperCase()}${emailUser.slice(1)}`;
     initials = `${emailUser.charAt(0)}${emailUser.charAt(1) || ''}`.toUpperCase();
   }
-  
+
   return { name, initials };
 }
 
@@ -34,10 +34,7 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_KEY!
-    );
+
 
     // Fetch the last 20 granted permissions
     const { data: permissions, error } = await supabase
