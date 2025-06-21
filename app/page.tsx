@@ -310,7 +310,7 @@ export default function Home() {
 
             {/* Subtitle */}
             <div
-              className="text-lg sm:text-xl text-gray-400 font-light flex items-center justify-center gap-1 min-h-[2.5em] whitespace-nowrap overflow-x-auto max-w-full"
+              className="text-lg sm:text-xl text-gray-400 font-light flex flex-wrap items-center justify-start sm:justify-center gap-1 min-h-[2.5em] max-w-full"
               aria-label="Access curated docs, AI startup resources, and actionable SaaS templates."
               style={{ position: 'relative' }}
             >
