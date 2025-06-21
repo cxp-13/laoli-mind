@@ -14,8 +14,8 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'lantianlaoli personal notion links hub',
-  description: 'Notion links location for Lantianlaoli on Xiaohongshu',
+  title: 'laolimind:Lantanlaoli store - notion link for collection',
+  description: 'Laolimind is a notion link platform to assist users in collecting purchases',
   keywords: [
     'Notion',
     'Web3',
