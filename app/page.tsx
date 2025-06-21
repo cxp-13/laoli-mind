@@ -248,6 +248,19 @@ export default function Home() {
         </Button>
       </div>
 
+      {/* Product Hunt Badge */}
+      <div className="fixed bottom-5 right-5 z-50">
+        <a href="https://www.producthunt.com/products/laolimind?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-laolimind" target="_blank" rel="noopener noreferrer">
+          <Image 
+            src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=981676&theme=dark&t=1750494361198" 
+            alt="laolimind - Lantanlaoli store - notion link for collection | Product Hunt"
+            style={{ width: '250px', height: '54px' }}
+            width={250}
+            height={54} 
+          />
+        </a>
+      </div>
+
       {/* Main Content Container */}
       <main className="flex-1 flex flex-col w-full">
         {/* Hero Section */}

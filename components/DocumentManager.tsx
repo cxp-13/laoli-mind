@@ -53,7 +53,7 @@ const DocumentForm = ({ formData, isLoading, isEdit, onSubmit, onInputChange, on
         onChange={(e) => onInputChange('title', e.target.value)}
         placeholder="Enter document title"
         required
-        className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:ring-gray-600"
+        className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
       />
     </div>
 
@@ -66,7 +66,7 @@ const DocumentForm = ({ formData, isLoading, isEdit, onSubmit, onInputChange, on
         placeholder="Enter document introduction"
         rows={3}
         required
-        className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:ring-gray-600"
+        className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
       />
     </div>
 
@@ -79,7 +79,7 @@ const DocumentForm = ({ formData, isLoading, isEdit, onSubmit, onInputChange, on
         onChange={(e) => onInputChange('link', e.target.value)}
         placeholder="https://example.com/document"
         required
-        className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:ring-gray-600"
+        className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
       />
     </div>
 

@@ -13,15 +13,17 @@ import {
   Plus,
   Trash2,
   Mail,
-  Calendar,
+  Calendar as CalendarIcon,
   AlertCircle,
   CheckCircle,
   Clock
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { zhCN } from 'date-fns/locale';
 import { Document } from '@/app/types';
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
+import { Calendar } from './ui/calendar';
+import { cn } from '@/lib/utils';
 
 interface Permission {
   id: string;
@@ -44,18 +46,14 @@ const pauseDuration = 400; // ms for pronounced pauses
 export function PermissionManager({ permissions, documents, onRefresh }: PermissionManagerProps) {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeadlineFocused, setIsDeadlineFocused] = useState(false);
   const [formData, setFormData] = useState({
     email: '',
     document_id: '',
     deadline: '',
   });
 
-  const [selectDoc, setSelectDoc] = useState<Document>();
-
-
-  useEffect(() => {
-    setSelectDoc(documents.find(doc => String(doc.id) === String(formData.document_id)));
-  }, [formData, documents]);
+  const selectedDocument = documents.find(doc => String(doc.id) === String(formData.document_id));
 
   const resetForm = () => {
     setFormData({
@@ -64,6 +62,8 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
       deadline: '',
     });
   };
+
+  const deadlineType = isDeadlineFocused || formData.deadline ? 'datetime-local' : 'text';
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -168,7 +168,7 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   placeholder="user@example.com"
                   required
-                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:ring-gray-600"
+                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500"
                 />
               </div>
 
@@ -180,8 +180,10 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                     setFormData({ ...formData, document_id: value })
                   }
                 >
-                  <SelectTrigger id="document" className="bg-gray-800 border-gray-700 text-white focus:ring-gray-600">
-                    <SelectValue placeholder="Select a document to assign" />
+                  <SelectTrigger id="document" className="bg-gray-800 border-gray-700 text-white">
+                    <SelectValue placeholder="Select a document to assign">
+                      {selectedDocument?.title}
+                    </SelectValue>
                   </SelectTrigger>
                   <SelectContent className="bg-gray-900 border-gray-800 text-white">
                     {documents.map((doc) => (
@@ -195,13 +197,28 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
 
               <div className="space-y-2">
                 <Label htmlFor="deadline" className="text-gray-300">Deadline (optional)</Label>
-                <Input
-                  id="deadline"
-                  type="datetime-local"
-                  value={formData.deadline}
-                  onChange={e => setFormData({ ...formData, deadline: e.target.value })}
-                  className="bg-gray-800 border-gray-700 text-white placeholder:text-gray-500 focus:ring-gray-600"
-                />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant={"outline"}
+                      className={cn(
+                        "w-full justify-start text-left font-normal bg-gray-800 border-gray-700 text-white hover:text-white",
+                        !formData.deadline && "text-gray-500"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {formData.deadline ? format(new Date(formData.deadline), "PPP") : <span>Pick a date</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0 bg-gray-900 border-gray-800 text-white" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={formData.deadline ? new Date(formData.deadline) : undefined}
+                      onSelect={(date) => setFormData({ ...formData, deadline: date?.toISOString() || '' })}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
                 <div className="text-xs text-gray-500">Leave empty for permanent access</div>
               </div>
 
@@ -284,8 +301,8 @@ export function PermissionManager({ permissions, documents, onRefresh }: Permiss
                             <p className="font-medium text-sm text-gray-300">{perm.document_title}</p>
                             <div className="flex items-center space-x-4 text-xs text-gray-500 mt-1">
                               <span className="flex items-center space-x-1">
-                                <Calendar className="w-3 h-3" />
-                                <span>{format(new Date(perm.created_at), 'yyyy年M月d日', { locale: zhCN })}</span>
+                                <CalendarIcon className="w-3 h-3" />
+                                <span>{format(new Date(perm.created_at), 'yyyy-MM-dd')}</span>
                               </span>
                               {perm.first_access ? (
                                 <Badge variant="outline" className="border-yellow-500/30 text-yellow-300 bg-yellow-900/30 text-xs">
