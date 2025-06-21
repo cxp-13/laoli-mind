@@ -14,41 +14,17 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'LaoliMind',
-  description: 'Provide notice information collection service for Lantianlaoli',
+  title: 'lantianlaoli personal notion links hub',
+  description: 'Notion links location for Lantianlaoli on Xiaohongshu',
   keywords: [
-    'LaoliMind',
     'Notion',
     'Web3',
     'AI',
-    'Transformation Resources',
-    'Digital Transformation',
-    'Knowledge Platform',
-    'Self-Service Access',
+    'rednote',
+    'xiaohongshu',
+    'notion links',
   ],
   icons: [{ rel: "icon", url: "/favicon.png" }],
-  openGraph: {
-    title: 'LaoliMind',
-    description: 'Provide notice information collection service for Lantianlaoli',
-    url: 'https://laolimind.vercel.app/',
-    siteName: 'LaoliMind',
-    images: [
-      {
-        url: 'https://laolimind.vercel.app/og-preview.png',
-        width: 1200,
-        height: 630,
-        alt: 'Provide notice information collection service for Lantianlaoli',
-      },
-    ],
-    locale: 'en_US',
-    type: 'website',
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'LaoliMind',
-    description: 'Provide notice information collection service for Lantianlaoli',
-    images: ['https://laolimind.vercel.app/og-preview.png'],
-  },
   robots: {
     index: true,
     follow: true,
